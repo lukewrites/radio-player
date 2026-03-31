@@ -1,0 +1,56 @@
+{
+  "metadata": {
+    "identifier": "OTRR_Dragnet_Singles",
+    "title": "Dragnet: Big Crime",
+    "description": "<p>The story of a Los Angeles police detective.</p>",
+    "creator": "NBC Radio",
+    "subject": ["Old Time Radio", "Drama", "Crime"],
+    "date": "1949-09-17"
+  },
+  "files": [
+    {
+      "name": "Dragnet_49-09-17_Cop_Killing.mp3",
+      "source": "original",
+      "format": "VBR MP3",
+      "size": "7654321",
+      "length": "1802.5",
+      "title": "Cop Killing",
+      "track": "01",
+      "creator": "NBC Radio"
+    },
+    {
+      "name": "Dragnet_49-09-24_Big_Gangster_Part1.mp3",
+      "source": "original",
+      "format": "VBR MP3",
+      "size": "6543210",
+      "length": "1500.0",
+      "title": "The Big Gangster Part 1",
+      "track": "02"
+    },
+    {
+      "name": "Dragnet_49-09-17_Cop_Killing.ogg",
+      "source": "derivative",
+      "format": "Ogg Vorbis",
+      "size": "4321000",
+      "length": "1802.5"
+    },
+    {
+      "name": "Dragnet_49-09-17_spectrogram.png",
+      "source": "derivative",
+      "format": "PNG",
+      "size": "12345"
+    },
+    {
+      "name": "__ia_thumb.jpg",
+      "source": "original",
+      "format": "JPEG Thumb",
+      "size": "5432"
+    },
+    {
+      "name": "OTRR_Dragnet_Singles_meta.xml",
+      "source": "original",
+      "format": "Metadata",
+      "size": "1234"
+    }
+  ]
+}
