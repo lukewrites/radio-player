@@ -1,4 +1,5 @@
 import Foundation
+import Observation
 
 public protocol URLSessionProtocol: Sendable {
     func data(from url: URL) async throws -> (Data, URLResponse)
@@ -6,9 +7,10 @@ public protocol URLSessionProtocol: Sendable {
 
 extension URLSession: URLSessionProtocol {}
 
-public final class ArchiveAPI: Sendable {
-    private let session: URLSessionProtocol
-    private let baseURL = "https://archive.org"
+@Observable
+public final class ArchiveAPI: @unchecked Sendable {
+    @ObservationIgnored private let session: URLSessionProtocol
+    @ObservationIgnored private let baseURL = "https://archive.org"
 
     public init(session: URLSessionProtocol = URLSession.shared) {
         self.session = session

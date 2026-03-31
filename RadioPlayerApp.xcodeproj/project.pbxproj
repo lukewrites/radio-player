@@ -11,6 +11,15 @@
 		A10000020000000000000002 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000020000000000000002; };
 		A10000030000000000000003 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A20000030000000000000003; };
 		A10000040000000000000004 /* RadioPlayer in Frameworks */ = {isa = PBXBuildFile; productRef = A60000010000000000000001; };
+		A10000050000000000000005 /* StylizedCoverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000070000000000000007; };
+		A10000060000000000000006 /* AsyncCachedImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000080000000000000008; };
+		A10000070000000000000007 /* CollectionListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000090000000000000009; };
+		A10000080000000000000008 /* CollectionBrowserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000000A000000000000000A; };
+		A10000090000000000000009 /* ShowCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000000B000000000000000B; };
+		A1000000A000000000000000A /* ShowDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000000C000000000000000C; };
+		A1000000B000000000000000B /* EpisodeRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000000D000000000000000D; };
+		A1000000C000000000000000C /* MiniPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000000E000000000000000E; };
+		A1000000D000000000000000D /* FullPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000000F000000000000000F; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -20,6 +29,15 @@
 		A20000040000000000000004 /* RadioPlayer */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = RadioPlayer; path = ..; sourceTree = "<group>"; };
 		A20000050000000000000005 /* RadioPlayerApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RadioPlayerApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A20000060000000000000006 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A20000070000000000000007 /* StylizedCoverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StylizedCoverView.swift; sourceTree = "<group>"; };
+		A20000080000000000000008 /* AsyncCachedImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncCachedImage.swift; sourceTree = "<group>"; };
+		A20000090000000000000009 /* CollectionListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionListView.swift; sourceTree = "<group>"; };
+		A2000000A000000000000000A /* CollectionBrowserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionBrowserView.swift; sourceTree = "<group>"; };
+		A2000000B000000000000000B /* ShowCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowCardView.swift; sourceTree = "<group>"; };
+		A2000000C000000000000000C /* ShowDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowDetailView.swift; sourceTree = "<group>"; };
+		A2000000D000000000000000D /* EpisodeRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EpisodeRowView.swift; sourceTree = "<group>"; };
+		A2000000E000000000000000E /* MiniPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniPlayerView.swift; sourceTree = "<group>"; };
+		A2000000F000000000000000F /* FullPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullPlayerView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -50,8 +68,65 @@
 				A20000020000000000000002 /* ContentView.swift */,
 				A20000030000000000000003 /* Assets.xcassets */,
 				A20000060000000000000006 /* Info.plist */,
+				A40000050000000000000005 /* Views */,
 			);
 			path = RadioPlayerApp;
+			sourceTree = "<group>";
+		};
+		A40000050000000000000005 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				A40000060000000000000006 /* Shared */,
+				A40000070000000000000007 /* Collections */,
+				A40000080000000000000008 /* Shows */,
+				A40000090000000000000009 /* Episodes */,
+				A4000000A000000000000000A /* Player */,
+			);
+			name = Views;
+			sourceTree = "<group>";
+		};
+		A40000060000000000000006 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				A20000070000000000000007 /* StylizedCoverView.swift */,
+				A20000080000000000000008 /* AsyncCachedImage.swift */,
+			);
+			path = Views/Shared;
+			sourceTree = "<group>";
+		};
+		A40000070000000000000007 /* Collections */ = {
+			isa = PBXGroup;
+			children = (
+				A20000090000000000000009 /* CollectionListView.swift */,
+				A2000000A000000000000000A /* CollectionBrowserView.swift */,
+			);
+			path = Views/Collections;
+			sourceTree = "<group>";
+		};
+		A40000080000000000000008 /* Shows */ = {
+			isa = PBXGroup;
+			children = (
+				A2000000B000000000000000B /* ShowCardView.swift */,
+				A2000000C000000000000000C /* ShowDetailView.swift */,
+			);
+			path = Views/Shows;
+			sourceTree = "<group>";
+		};
+		A40000090000000000000009 /* Episodes */ = {
+			isa = PBXGroup;
+			children = (
+				A2000000D000000000000000D /* EpisodeRowView.swift */,
+			);
+			path = Views/Episodes;
+			sourceTree = "<group>";
+		};
+		A4000000A000000000000000A /* Player */ = {
+			isa = PBXGroup;
+			children = (
+				A2000000E000000000000000E /* MiniPlayerView.swift */,
+				A2000000F000000000000000F /* FullPlayerView.swift */,
+			);
+			path = Views/Player;
 			sourceTree = "<group>";
 		};
 		A40000030000000000000003 /* Packages */ = {
@@ -142,6 +217,15 @@
 			files = (
 				A10000010000000000000001 /* RadioPlayerApp.swift in Sources */,
 				A10000020000000000000002 /* ContentView.swift in Sources */,
+				A10000050000000000000005 /* StylizedCoverView.swift in Sources */,
+				A10000060000000000000006 /* AsyncCachedImage.swift in Sources */,
+				A10000070000000000000007 /* CollectionListView.swift in Sources */,
+				A10000080000000000000008 /* CollectionBrowserView.swift in Sources */,
+				A10000090000000000000009 /* ShowCardView.swift in Sources */,
+				A1000000A000000000000000A /* ShowDetailView.swift in Sources */,
+				A1000000B000000000000000B /* EpisodeRowView.swift in Sources */,
+				A1000000C000000000000000C /* MiniPlayerView.swift in Sources */,
+				A1000000D000000000000000D /* FullPlayerView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
