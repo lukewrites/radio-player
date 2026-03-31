@@ -34,7 +34,7 @@ struct ContentView: View {
             if let collection = selectedCollection {
                 CollectionBrowserView(collection: collection, selectedShow: $selectedShow)
             } else {
-                ContentUnavailableView("Select a Collection", systemImage: "radio")
+                LibraryView()
             }
         } detail: {
             if let show = selectedShow {
@@ -53,7 +53,7 @@ struct ContentView: View {
             if let collection = selectedCollection {
                 CollectionBrowserView(collection: collection, selectedShow: $selectedShow)
             } else {
-                ContentUnavailableView("Select a Collection", systemImage: "radio")
+                LibraryView()
             }
         } detail: {
             if let show = selectedShow {

@@ -20,6 +20,7 @@
 		A1000000B000000000000000B /* EpisodeRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000000D000000000000000D; };
 		A1000000C000000000000000C /* MiniPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000000E000000000000000E; };
 		A1000000D000000000000000D /* FullPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000000F000000000000000F; };
+		A1000000E000000000000000E /* LibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000010000000000000010; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +39,7 @@
 		A2000000D000000000000000D /* EpisodeRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EpisodeRowView.swift; sourceTree = "<group>"; };
 		A2000000E000000000000000E /* MiniPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniPlayerView.swift; sourceTree = "<group>"; };
 		A2000000F000000000000000F /* FullPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullPlayerView.swift; sourceTree = "<group>"; };
+		A20000010000000000000010 /* LibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,6 +83,7 @@
 				A40000080000000000000008 /* Shows */,
 				A40000090000000000000009 /* Episodes */,
 				A4000000A000000000000000A /* Player */,
+			A4000000B000000000000000B /* Library */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -127,6 +130,14 @@
 				A2000000F000000000000000F /* FullPlayerView.swift */,
 			);
 			path = Views/Player;
+			sourceTree = "<group>";
+		};
+		A4000000B000000000000000B /* Library */ = {
+			isa = PBXGroup;
+			children = (
+				A20000010000000000000010 /* LibraryView.swift */,
+			);
+			path = Views/Library;
 			sourceTree = "<group>";
 		};
 		A40000030000000000000003 /* Packages */ = {
@@ -226,6 +237,7 @@
 				A1000000B000000000000000B /* EpisodeRowView.swift in Sources */,
 				A1000000C000000000000000C /* MiniPlayerView.swift in Sources */,
 				A1000000D000000000000000D /* FullPlayerView.swift in Sources */,
+				A1000000E000000000000000E /* LibraryView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
