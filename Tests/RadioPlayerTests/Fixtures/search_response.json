@@ -1,0 +1,36 @@
+{
+  "responseHeader": {
+    "status": 0,
+    "QTime": 152,
+    "params": {
+      "query": "collection:oldtimeradio",
+      "qin": "collection:oldtimeradio",
+      "fields": "identifier,title,description,creator,date,downloads",
+      "wt": "json",
+      "rows": "2",
+      "start": "0"
+    }
+  },
+  "response": {
+    "numFound": 8855,
+    "start": 0,
+    "docs": [
+      {
+        "identifier": "OTRR_Dragnet_Singles",
+        "title": "Dragnet: Big Crime",
+        "description": "The story of a Los Angeles police detective and his partners.",
+        "creator": "NBC Radio",
+        "date": "1949-09-17T00:00:00Z",
+        "downloads": 54321
+      },
+      {
+        "identifier": "OTRR_Suspense_Singles",
+        "title": "Suspense: Tales Well Calculated",
+        "description": "Radio's outstanding theater of thrills.",
+        "creator": ["CBS Radio", "AutoProgrammed"],
+        "date": "1942-06-17T00:00:00Z",
+        "downloads": 32100
+      }
+    ]
+  }
+}
