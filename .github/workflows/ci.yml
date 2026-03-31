@@ -38,18 +38,23 @@ jobs:
       - name: Select Xcode
         run: sudo xcode-select -s /Applications/Xcode_16.2.app/Contents/Developer
 
-      - name: List available simulators
-        run: xcrun simctl list devices available --json | python3 -c "import json,sys; d=json.load(sys.stdin)['devices']; [print(k,v[0]['name']) for k,v in d.items() if v and 'iPhone' in v[0].get('name','')]" 2>/dev/null || true
+      - name: Show available schemes and SDKs
+        run: |
+          echo "=== Schemes ==="
+          xcodebuild -project RadioPlayerApp.xcodeproj -list
+          echo "=== SDKs ==="
+          xcodebuild -showsdks | grep -E "iphoneos|iphonesimulator"
 
       - name: Build for iOS Simulator
-        run: >
-          xcodebuild
-          -project RadioPlayerApp.xcodeproj
-          -scheme RadioPlayerApp
-          -destination 'generic/platform=iOS Simulator'
-          -configuration Debug
-          build
-          CODE_SIGNING_ALLOWED=NO
+        run: |
+          xcodebuild \
+            -project RadioPlayerApp.xcodeproj \
+            -scheme RadioPlayerApp \
+            -sdk iphonesimulator \
+            -configuration Debug \
+            ONLY_ACTIVE_ARCH=NO \
+            CODE_SIGNING_ALLOWED=NO \
+            build
 
   build-macos:
     name: Build macOS App
@@ -63,11 +68,11 @@ jobs:
         run: sudo xcode-select -s /Applications/Xcode_16.2.app/Contents/Developer
 
       - name: Build for macOS
-        run: >
-          xcodebuild
-          -project RadioPlayerApp.xcodeproj
-          -scheme RadioPlayerApp
-          -destination 'platform=macOS'
-          -configuration Debug
-          build
-          CODE_SIGNING_ALLOWED=NO
+        run: |
+          xcodebuild \
+            -project RadioPlayerApp.xcodeproj \
+            -scheme RadioPlayerApp \
+            -destination 'platform=macOS' \
+            -configuration Debug \
+            CODE_SIGNING_ALLOWED=NO \
+            build
