@@ -3,6 +3,7 @@ import RadioPlayer
 
 struct FullPlayerView: View {
     @Environment(AudioPlayerService.self) private var player
+    @Environment(SleepTimer.self) private var sleepTimer
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {
@@ -83,6 +84,9 @@ struct FullPlayerView: View {
                 .pickerStyle(.segmented)
                 .padding(.horizontal)
 
+                // Sleep timer
+                sleepTimerRow
+
                 Spacer()
             }
             .toolbar {
@@ -94,5 +98,37 @@ struct FullPlayerView: View {
             .navigationBarTitleDisplayMode(.inline)
             #endif
         }
+    }
+
+    @ViewBuilder
+    private var sleepTimerRow: some View {
+        HStack {
+            Image(systemName: "moon.zzz")
+                .foregroundStyle(.secondary)
+
+            if sleepTimer.isActive {
+                Text(sleepTimer.formattedRemaining)
+                    .monospacedDigit()
+                    .foregroundStyle(.orange)
+                Spacer()
+                Button("Cancel") { sleepTimer.cancel() }
+                    .foregroundStyle(.orange)
+            } else {
+                Text("Sleep Timer")
+                    .foregroundStyle(.secondary)
+                Spacer()
+                Menu {
+                    ForEach(SleepTimer.presets, id: \.self) { minutes in
+                        Button("\(minutes) min") {
+                            sleepTimer.start(minutes: minutes)
+                        }
+                    }
+                } label: {
+                    Text("Set")
+                }
+            }
+        }
+        .font(.subheadline)
+        .padding(.horizontal)
     }
 }
