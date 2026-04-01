@@ -84,11 +84,10 @@ struct CollectionBrowserView: View {
             if viewModel == nil {
                 viewModel = CollectionBrowserViewModel(collection: collection, api: api)
             }
-            guard let vm = viewModel else { return }
-            // Retry until shows load, a real error occurs, or the view is gone
-            while vm.shows.isEmpty && vm.errorMessage == nil && !Task.isCancelled {
-                await vm.loadInitial()
-            }
+            guard let vm = viewModel, vm.shows.isEmpty && !vm.isLoading else { return }
+            // Unstructured task: not tied to view lifecycle, so NavigationSplitView
+            // transitions can't cancel the load mid-flight.
+            Task { await vm.loadInitial() }
         }
     }
 }
