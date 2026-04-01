@@ -34,16 +34,16 @@ final class AppLaunchTests: XCTestCase {
         let backButton = app.navigationBars.buttons["Radio Player"]
         guard backButton.waitForExistence(timeout: 5) else {
             // Already on the sidebar or wide layout — look for the list directly
-            let oldTimeRadio = app.staticTexts["Old Time Radio"]
-            XCTAssertTrue(oldTimeRadio.waitForExistence(timeout: 5),
-                          "Old Time Radio should be visible in sidebar")
+            let allShows = app.staticTexts["All Shows"]
+            XCTAssertTrue(allShows.waitForExistence(timeout: 5),
+                          "All Shows should be visible in sidebar")
             return
         }
         backButton.tap()
 
-        let oldTimeRadio = app.staticTexts["Old Time Radio"]
-        XCTAssertTrue(oldTimeRadio.waitForExistence(timeout: 5),
-                      "Old Time Radio should be visible after navigating to sidebar")
+        let allShows = app.staticTexts["All Shows"]
+        XCTAssertTrue(allShows.waitForExistence(timeout: 5),
+                      "All Shows should be visible after navigating to sidebar")
     }
 
     func testLibraryRowVisible() {
