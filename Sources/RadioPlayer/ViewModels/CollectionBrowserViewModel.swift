@@ -39,6 +39,8 @@ public final class CollectionBrowserViewModel {
             shows = result.docs
             totalCount = result.totalCount
             currentStart = result.docs.count
+        } catch is CancellationError {
+            // Task cancelled by SwiftUI navigation — not a user-visible error
         } catch {
             errorMessage = error.localizedDescription
         }
@@ -60,6 +62,8 @@ public final class CollectionBrowserViewModel {
             shows.append(contentsOf: result.docs)
             totalCount = result.totalCount
             currentStart += result.docs.count
+        } catch is CancellationError {
+            // Task cancelled by SwiftUI navigation — not a user-visible error
         } catch {
             errorMessage = error.localizedDescription
         }
