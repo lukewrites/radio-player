@@ -3,6 +3,7 @@ import RadioPlayer
 
 struct MiniPlayerView: View {
     @Environment(AudioPlayerService.self) private var player
+    @Environment(\.appTheme) private var theme
     @State private var showFullPlayer = false
 
     var body: some View {
@@ -63,7 +64,7 @@ struct MiniPlayerView: View {
             if player.duration > 0 {
                 GeometryReader { geo in
                     Rectangle()
-                        .fill(.blue.opacity(0.6))
+                        .fill(theme.accent.opacity(0.7))
                         .frame(width: geo.size.width * (player.currentTime / player.duration), height: 2)
                 }
                 .frame(height: 2)

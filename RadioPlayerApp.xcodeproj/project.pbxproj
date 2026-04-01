@@ -21,6 +21,15 @@
 		A1000000C000000000000000C /* MiniPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000000E000000000000000E; };
 		A1000000D000000000000000D /* FullPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000000F000000000000000F; };
 		A1000000E000000000000000E /* LibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000010000000000000010; };
+		T30000010000000000000001 /* AppTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = T20000010000000000000001; };
+		T30000020000000000000002 /* ThemeKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = T20000020000000000000002; };
+		T30000030000000000000003 /* ThemeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = T20000030000000000000003; };
+		T30000040000000000000004 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = T20000040000000000000004; };
+		FF0000020000000000000002 /* UITestMockURLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF0000010000000000000001; };
+		FF0000080000000000000008 /* AppLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF0000050000000000000005; };
+		FF0000090000000000000009 /* NavigationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF0000060000000000000006; };
+		FF000000A000000000000000A /* PlayerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF0000070000000000000007; };
+		FF0000140000000000000014 /* DebugTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF0000130000000000000013; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -40,6 +49,16 @@
 		A2000000E000000000000000E /* MiniPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniPlayerView.swift; sourceTree = "<group>"; };
 		A2000000F000000000000000F /* FullPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullPlayerView.swift; sourceTree = "<group>"; };
 		A20000010000000000000010 /* LibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryView.swift; sourceTree = "<group>"; };
+		T20000010000000000000001 /* AppTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTheme.swift; sourceTree = "<group>"; };
+		T20000020000000000000002 /* ThemeKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeKey.swift; sourceTree = "<group>"; };
+		T20000030000000000000003 /* ThemeStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeStore.swift; sourceTree = "<group>"; };
+		T20000040000000000000004 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		FF0000010000000000000001 /* UITestMockURLSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITestMockURLSession.swift; sourceTree = "<group>"; };
+		FF0000040000000000000004 /* RadioPlayerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RadioPlayerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		FF0000050000000000000005 /* AppLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLaunchTests.swift; sourceTree = "<group>"; };
+		FF0000060000000000000006 /* NavigationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationTests.swift; sourceTree = "<group>"; };
+		FF0000070000000000000007 /* PlayerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerTests.swift; sourceTree = "<group>"; };
+		FF0000130000000000000013 /* DebugTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +77,7 @@
 			isa = PBXGroup;
 			children = (
 				A40000020000000000000002 /* RadioPlayerApp */,
+				FF000000B000000000000000B /* UITests */,
 				A40000030000000000000003 /* Packages */,
 				A40000040000000000000004 /* Products */,
 			);
@@ -70,9 +90,40 @@
 				A20000020000000000000002 /* ContentView.swift */,
 				A20000030000000000000003 /* Assets.xcassets */,
 				A20000060000000000000006 /* Info.plist */,
+				T10000010000000000000001 /* Theme */,
 				A40000050000000000000005 /* Views */,
+				FF0000030000000000000003 /* UITestSupport */,
 			);
 			path = RadioPlayerApp;
+			sourceTree = "<group>";
+		};
+		FF0000030000000000000003 /* UITestSupport */ = {
+			isa = PBXGroup;
+			children = (
+				FF0000010000000000000001 /* UITestMockURLSession.swift */,
+			);
+			path = UITestSupport;
+			sourceTree = "<group>";
+		};
+		FF000000B000000000000000B /* UITests */ = {
+			isa = PBXGroup;
+			children = (
+				FF0000050000000000000005 /* AppLaunchTests.swift */,
+				FF0000060000000000000006 /* NavigationTests.swift */,
+				FF0000070000000000000007 /* PlayerTests.swift */,
+				FF0000130000000000000013 /* DebugTests.swift */,
+			);
+			path = RadioPlayerApp/UITests;
+			sourceTree = "<group>";
+		};
+		T10000010000000000000001 /* Theme */ = {
+			isa = PBXGroup;
+			children = (
+				T20000010000000000000001 /* AppTheme.swift */,
+				T20000020000000000000002 /* ThemeKey.swift */,
+				T20000030000000000000003 /* ThemeStore.swift */,
+			);
+			path = Theme;
 			sourceTree = "<group>";
 		};
 		A40000050000000000000005 /* Views */ = {
@@ -83,9 +134,18 @@
 				A40000080000000000000008 /* Shows */,
 				A40000090000000000000009 /* Episodes */,
 				A4000000A000000000000000A /* Player */,
-			A4000000B000000000000000B /* Library */,
+				A4000000B000000000000000B /* Library */,
+				T10000020000000000000002 /* Settings */,
 			);
 			name = Views;
+			sourceTree = "<group>";
+		};
+		T10000020000000000000002 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				T20000040000000000000004 /* SettingsView.swift */,
+			);
+			path = Views/Settings;
 			sourceTree = "<group>";
 		};
 		A40000060000000000000006 /* Shared */ = {
@@ -152,6 +212,7 @@
 			isa = PBXGroup;
 			children = (
 				A20000050000000000000005 /* RadioPlayerApp.app */,
+				FF0000040000000000000004 /* RadioPlayerUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -178,6 +239,22 @@
 			productName = RadioPlayerApp;
 			productReference = A20000050000000000000005 /* RadioPlayerApp.app */;
 			productType = "com.apple.product-type.application";
+		};
+		FF000000D000000000000000D /* RadioPlayerUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FF0000100000000000000010 /* Build configuration list for PBXNativeTarget "RadioPlayerUITests" */;
+			buildPhases = (
+				FF000000C000000000000000C /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				FF0000110000000000000011 /* PBXTargetDependency */,
+			);
+			name = RadioPlayerUITests;
+			productName = RadioPlayerUITests;
+			productReference = FF0000040000000000000004 /* RadioPlayerUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
 
@@ -206,9 +283,28 @@
 			projectRoot = "";
 			targets = (
 				A50000010000000000000001 /* RadioPlayerApp */,
+				FF000000D000000000000000D /* RadioPlayerUITests */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXContainerItemProxy section */
+		FF0000120000000000000012 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B00000010000000000000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A50000010000000000000001;
+			remoteInfo = RadioPlayerApp;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXTargetDependency section */
+		FF0000110000000000000011 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A50000010000000000000001 /* RadioPlayerApp */;
+			targetProxy = FF0000120000000000000012 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXResourcesBuildPhase section */
 		A50000030000000000000003 /* Resources */ = {
@@ -238,6 +334,22 @@
 				A1000000C000000000000000C /* MiniPlayerView.swift in Sources */,
 				A1000000D000000000000000D /* FullPlayerView.swift in Sources */,
 				A1000000E000000000000000E /* LibraryView.swift in Sources */,
+				T30000010000000000000001 /* AppTheme.swift in Sources */,
+				T30000020000000000000002 /* ThemeKey.swift in Sources */,
+				T30000030000000000000003 /* ThemeStore.swift in Sources */,
+				T30000040000000000000004 /* SettingsView.swift in Sources */,
+				FF0000020000000000000002 /* UITestMockURLSession.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FF000000C000000000000000C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FF0000080000000000000008 /* AppLaunchTests.swift in Sources */,
+				FF0000090000000000000009 /* NavigationTests.swift in Sources */,
+				FF000000A000000000000000A /* PlayerTests.swift in Sources */,
+				FF0000140000000000000014 /* DebugTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -356,6 +468,41 @@
 			};
 			name = Release;
 		};
+		FF000000E000000000000000E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.radioplayer.uitests;
+				PRODUCT_NAME = RadioPlayerUITests;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) DEBUG";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = RadioPlayerApp;
+			};
+			name = Debug;
+		};
+		FF000000F000000000000000F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.radioplayer.uitests;
+				PRODUCT_NAME = RadioPlayerUITests;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = RadioPlayerApp;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -373,6 +520,15 @@
 			buildConfigurations = (
 				B10000030000000000000003 /* Debug */,
 				B10000040000000000000004 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FF0000100000000000000010 /* Build configuration list for PBXNativeTarget "RadioPlayerUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FF000000E000000000000000E /* Debug */,
+				FF000000F000000000000000F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

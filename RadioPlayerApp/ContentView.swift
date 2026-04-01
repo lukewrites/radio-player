@@ -4,6 +4,7 @@ import RadioPlayer
 struct ContentView: View {
     @Environment(AudioPlayerService.self) private var player
     @Environment(NetworkMonitor.self) private var networkMonitor
+    @Binding var currentTheme: AppTheme
     @State private var selectedCollection: ArchiveCollection? = .oldTimeRadio
     @State private var selectedShow: SearchDoc?
 
@@ -53,7 +54,7 @@ struct ContentView: View {
 
     private var macLayout: some View {
         NavigationSplitView {
-            CollectionListView(selectedCollection: $selectedCollection)
+            CollectionListView(selectedCollection: $selectedCollection, currentTheme: $currentTheme)
         } content: {
             if let collection = selectedCollection {
                 CollectionBrowserView(collection: collection, selectedShow: $selectedShow)
@@ -72,7 +73,7 @@ struct ContentView: View {
     private var iOSLayout: some View {
         // iPhone uses compact split view; iPad gets three-column automatically
         NavigationSplitView {
-            CollectionListView(selectedCollection: $selectedCollection)
+            CollectionListView(selectedCollection: $selectedCollection, currentTheme: $currentTheme)
         } content: {
             if let collection = selectedCollection {
                 CollectionBrowserView(collection: collection, selectedShow: $selectedShow)
@@ -90,6 +91,7 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView()
+    ContentView(currentTheme: .constant(.system))
         .environment(AudioPlayerService())
+        .environment(NetworkMonitor())
 }

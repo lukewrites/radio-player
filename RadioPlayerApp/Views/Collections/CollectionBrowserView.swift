@@ -32,12 +32,11 @@ struct CollectionBrowserView: View {
                     } else {
                         LazyVGrid(columns: columns, spacing: 20) {
                             ForEach(vm.shows, id: \.identifier) { doc in
-                                Button {
-                                    selectedShow = doc
-                                } label: {
+                                NavigationLink(value: doc) {
                                     ShowCardView(doc: doc)
                                 }
                                 .buttonStyle(.plain)
+                                .accessibilityLabel(doc.title ?? doc.identifier)
                                 .onAppear {
                                     // Trigger next page when last item appears
                                     if doc.identifier == vm.shows.last?.identifier {
@@ -56,18 +55,12 @@ struct CollectionBrowserView: View {
                         .padding()
                     }
                 }
-                .navigationTitle(collection.displayName)
                 .searchable(text: Binding(
                     get: { vm.searchText },
                     set: { text in
                         Task { await vm.search(text) }
                     }
                 ), prompt: "Search shows")
-                .task {
-                    if vm.shows.isEmpty {
-                        await vm.loadInitial()
-                    }
-                }
                 .refreshable {
                     await vm.loadInitial()
                 }
@@ -79,11 +72,20 @@ struct CollectionBrowserView: View {
                 } message: {
                     Text(vm.errorMessage ?? "")
                 }
+            } else {
+                ProgressView("Loading…")
             }
         }
-        .onAppear {
+        .navigationTitle(collection.displayName)
+        .navigationDestination(for: SearchDoc.self) { doc in
+            ShowDetailView(doc: doc)
+        }
+        .task {
             if viewModel == nil {
                 viewModel = CollectionBrowserViewModel(collection: collection, api: api)
+            }
+            if let vm = viewModel, vm.shows.isEmpty {
+                await vm.loadInitial()
             }
         }
     }

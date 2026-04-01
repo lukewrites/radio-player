@@ -10,7 +10,9 @@ public struct SearchResponseBody: Codable, Sendable {
     public let docs: [SearchDoc]
 }
 
-public struct SearchDoc: Codable, Sendable {
+public struct SearchDoc: Codable, Sendable, Hashable {
+    public static func == (lhs: SearchDoc, rhs: SearchDoc) -> Bool { lhs.identifier == rhs.identifier }
+    public func hash(into hasher: inout Hasher) { hasher.combine(identifier) }
     public let identifier: String
     public let title: String?
     public let description: String?

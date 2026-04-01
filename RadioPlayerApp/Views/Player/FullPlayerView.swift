@@ -4,6 +4,7 @@ import RadioPlayer
 struct FullPlayerView: View {
     @Environment(AudioPlayerService.self) private var player
     @Environment(SleepTimer.self) private var sleepTimer
+    @Environment(\.appTheme) private var theme
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {
@@ -39,7 +40,6 @@ struct FullPlayerView: View {
                             set: { player.seekTo($0 * player.duration) }
                         )
                     )
-                    .tint(.blue)
 
                     HStack {
                         Text(formatDuration(player.currentTime))
@@ -97,6 +97,23 @@ struct FullPlayerView: View {
             #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
             #endif
+            .background {
+                if !theme.playerGradientColors.isEmpty {
+                    LinearGradient(
+                        colors: theme.playerGradientColors,
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                    .ignoresSafeArea()
+                }
+            }
+        }
+        .modify { view in
+            if theme.forceDarkPlayer {
+                view.environment(\.colorScheme, .dark)
+            } else {
+                view
+            }
         }
     }
 
