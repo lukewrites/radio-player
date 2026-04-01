@@ -1,6 +1,5 @@
 import XCTest
 
-@MainActor
 final class AppLaunchTests: XCTestCase {
 
     private var app: XCUIApplication!

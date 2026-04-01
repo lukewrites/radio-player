@@ -1,6 +1,5 @@
 import XCTest
 
-@MainActor
 final class NavigationTests: XCTestCase {
 
     private var app: XCUIApplication!
