@@ -26,7 +26,7 @@ public final class ArchiveAPI: @unchecked Sendable {
         start: Int = 0,
         rows: Int = 40
     ) -> URL {
-        var q = "collection:\(collection.rawValue)"
+        var q = collection.baseQuery
         if let query, !query.isEmpty {
             q += " AND (\(query))"
         }

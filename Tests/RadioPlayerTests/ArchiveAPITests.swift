@@ -31,7 +31,7 @@ struct ArchiveAPITests {
 
         #expect(components.host == "archive.org")
         #expect(components.path == "/advancedsearch.php")
-        #expect(queryItems.contains { $0.name == "q" && $0.value == "collection:oldtimeradio" })
+        #expect(queryItems.contains { $0.name == "q" && $0.value == "identifier:OTRR_*" })
         #expect(queryItems.contains { $0.name == "output" && $0.value == "json" })
         #expect(queryItems.contains { $0.name == "rows" && $0.value == "40" })
         #expect(queryItems.contains { $0.name == "start" && $0.value == "0" })
@@ -53,7 +53,7 @@ struct ArchiveAPITests {
 
         let components = URLComponents(url: url, resolvingAgainstBaseURL: false)!
         let qParam = components.queryItems?.first { $0.name == "q" }?.value
-        #expect(qParam == "collection:oldtimeradio AND (dragnet)")
+        #expect(qParam == "identifier:OTRR_* AND (dragnet)")
     }
 
     @Test("Search URL paginates with start offset")

@@ -8,14 +8,18 @@ struct CollectionListView: View {
 
     var body: some View {
         List(selection: $selectedCollection) {
-            Section("Collections") {
-                ForEach(ArchiveCollection.allCases) { collection in
+            Section("Old Time Radio") {
+                ForEach(ArchiveCollection.allCases.filter { $0.category == .otrr }) { collection in
                     Label(collection.displayName, systemImage: collection.systemImage)
                         .tag(collection)
                 }
             }
 
-            Section {
+            Section("Other") {
+                ForEach(ArchiveCollection.allCases.filter { $0.category == .general }) { collection in
+                    Label(collection.displayName, systemImage: collection.systemImage)
+                        .tag(collection)
+                }
                 Label("Library", systemImage: "square.and.arrow.down")
                     .tag(Optional<ArchiveCollection>.none)
             }

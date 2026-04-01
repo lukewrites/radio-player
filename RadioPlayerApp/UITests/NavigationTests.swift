@@ -25,22 +25,22 @@ final class NavigationTests: XCTestCase {
     }
 
     func testCollectionBrowserShowsTitle() {
-        // The collection browser should have a navigation title visible in the nav bar
-        // After the .task fix, the nav title is always set regardless of viewModel state
-        let navBar = app.navigationBars["Old Time Radio"]
+        // The collection browser should have a navigation title visible in the nav bar.
+        // Default selection is "All Shows" (the .oldTimeRadio catch-all).
+        let navBar = app.navigationBars["All Shows"]
         if !navBar.waitForExistence(timeout: 3) {
-            // Might be on sidebar — tap Old Time Radio to navigate
+            // Might be on sidebar — tap "All Shows" to navigate
             navigateToSidebarIfNeeded()
-            let row = app.staticTexts["Old Time Radio"]
+            let row = app.staticTexts["All Shows"]
             guard row.waitForExistence(timeout: 5) else {
-                XCTFail("Could not find Old Time Radio row in sidebar")
+                XCTFail("Could not find All Shows row in sidebar")
                 return
             }
             row.tap()
         }
-        let browser = app.navigationBars["Old Time Radio"]
+        let browser = app.navigationBars["All Shows"]
         XCTAssertTrue(browser.waitForExistence(timeout: 5),
-                      "Old Time Radio navigation title should appear in collection browser")
+                      "All Shows navigation title should appear in collection browser")
     }
 
     func testOldTimeRadioCollectionLoads() {
@@ -85,6 +85,30 @@ final class NavigationTests: XCTestCase {
         XCTAssertTrue(
             app.navigationBars["Settings"].waitForExistence(timeout: 3),
             "Settings sheet should open"
+        )
+    }
+
+    func testGenreSectionsVisibleInSidebar() {
+        navigateToSidebarIfNeeded()
+        XCTAssertTrue(app.staticTexts["Drama"].waitForExistence(timeout: 5),
+                      "Drama genre row should be visible in sidebar")
+        XCTAssertTrue(app.staticTexts["Comedy"].waitForExistence(timeout: 3),
+                      "Comedy genre row should be visible in sidebar")
+        XCTAssertTrue(app.staticTexts["Mystery & Detective"].waitForExistence(timeout: 3),
+                      "Mystery & Detective genre row should be visible in sidebar")
+    }
+
+    func testTappingGenreNavigatesToBrowser() {
+        navigateToSidebarIfNeeded()
+        let comedy = app.staticTexts["Comedy"]
+        guard comedy.waitForExistence(timeout: 5) else {
+            XCTFail("Comedy row not found in sidebar")
+            return
+        }
+        comedy.tap()
+        XCTAssertTrue(
+            app.navigationBars["Comedy"].waitForExistence(timeout: 5),
+            "Tapping Comedy should open its collection browser"
         )
     }
 }

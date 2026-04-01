@@ -18,12 +18,12 @@ final class PlayerTests: XCTestCase {
     }
 
     private func navigateToCollectionBrowser() {
-        // If on sidebar, tap "Old Time Radio" to go to collection browser
+        // If on sidebar, tap "All Shows" to go to collection browser
         let backButton = app.navigationBars.buttons["Radio Player"]
         if backButton.waitForExistence(timeout: 2) {
             backButton.tap()
         }
-        let row = app.staticTexts["Old Time Radio"]
+        let row = app.staticTexts["All Shows"]
         if row.waitForExistence(timeout: 3) {
             row.tap()
         }

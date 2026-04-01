@@ -44,7 +44,7 @@ struct DomainModelTests {
 
     @Test("ArchiveCollection has human-readable display names")
     func archiveCollectionDisplayNames() {
-        #expect(ArchiveCollection.oldTimeRadio.displayName == "Old Time Radio")
+        #expect(ArchiveCollection.oldTimeRadio.displayName == "All Shows")
         #expect(ArchiveCollection.radioBooks.displayName == "Radio Books")
     }
 
