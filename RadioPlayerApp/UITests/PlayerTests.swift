@@ -1,5 +1,6 @@
 import XCTest
 
+@MainActor
 final class PlayerTests: XCTestCase {
 
     private var app: XCUIApplication!
