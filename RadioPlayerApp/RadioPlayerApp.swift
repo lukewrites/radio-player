@@ -30,6 +30,7 @@ struct RadioPlayerApp: App {
                 .environment(api)
                 .environment(\.appTheme, currentTheme)
                 .tint(currentTheme.accent)
+                .preferredColorScheme(currentTheme.preferredColorScheme)
                 .onAppear {
                     audioPlayer.configureRemoteCommands()
                     audioPlayer.playbackRate = speedStore.speed

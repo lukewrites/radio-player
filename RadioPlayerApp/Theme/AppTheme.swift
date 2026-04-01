@@ -14,6 +14,8 @@ struct AppTheme: Equatable, Hashable {
     let playerGradientColors: [Color]
     /// When true, FullPlayerView forces dark color scheme (needed when playerGradient is dark).
     let forceDarkPlayer: Bool
+    /// App-level preferred color scheme. nil means follow system.
+    let preferredColorScheme: ColorScheme?
     let miniPlayerTint: Color
 
     static let system = AppTheme(
@@ -22,6 +24,7 @@ struct AppTheme: Equatable, Hashable {
         accent: .accentColor,
         playerGradientColors: [],
         forceDarkPlayer: false,
+        preferredColorScheme: nil,
         miniPlayerTint: Color.primary.opacity(0.05)
     )
 
@@ -34,6 +37,7 @@ struct AppTheme: Equatable, Hashable {
             Color(hue: 0.62, saturation: 0.40, brightness: 0.07)        // near-black
         ],
         forceDarkPlayer: true,
+        preferredColorScheme: .dark,
         miniPlayerTint: Color(hue: 0.62, saturation: 0.35, brightness: 0.14)
     )
 

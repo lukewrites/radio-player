@@ -117,6 +117,33 @@ struct CollectionBrowserViewModelTests {
         #expect(vm.errorMessage != nil)
         #expect(vm.isLoading == false)
     }
+
+    @Test("loadInitial does not set errorMessage on cancellation")
+    func loadInitialCancellationSilenced() async throws {
+        let api = ArchiveAPI(session: CancellingMockURLSession())
+        let vm = CollectionBrowserViewModel(collection: .oldTimeRadio, api: api)
+
+        await vm.loadInitial()
+
+        #expect(vm.shows.isEmpty)
+        #expect(vm.errorMessage == nil, "CancellationError should not surface as a user-visible error")
+        #expect(vm.isLoading == false)
+    }
+
+    @Test("loadMore does not set errorMessage on cancellation")
+    func loadMoreCancellationSilenced() async throws {
+        let data = try loadFixture("search_response")
+        let api = ArchiveAPI(session: SequentialMockURLSession(responses: [data]))
+        let vm = CollectionBrowserViewModel(collection: .oldTimeRadio, api: api)
+        await vm.loadInitial()
+
+        let cancelApi = ArchiveAPI(session: CancellingMockURLSession())
+        let vm2 = CollectionBrowserViewModel(collection: .oldTimeRadio, api: cancelApi)
+        vm2.shows = vm.shows
+        await vm2.loadMore()
+
+        #expect(vm2.errorMessage == nil, "CancellationError should not surface as a user-visible error")
+    }
 }
 
 // MARK: - Test Helpers
@@ -158,5 +185,12 @@ final class TrackingMockURLSession: URLSessionProtocol, @unchecked Sendable {
 final class FailingMockURLSession: URLSessionProtocol, @unchecked Sendable {
     func data(from url: URL) async throws -> (Data, URLResponse) {
         throw URLError(.notConnectedToInternet)
+    }
+}
+
+/// Throws CancellationError to simulate a task being cancelled mid-flight
+final class CancellingMockURLSession: URLSessionProtocol, @unchecked Sendable {
+    func data(from url: URL) async throws -> (Data, URLResponse) {
+        throw CancellationError()
     }
 }

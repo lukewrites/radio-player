@@ -84,7 +84,9 @@ struct CollectionBrowserView: View {
             if viewModel == nil {
                 viewModel = CollectionBrowserViewModel(collection: collection, api: api)
             }
-            if let vm = viewModel, vm.shows.isEmpty {
+            guard let vm = viewModel else { return }
+            // Retry until shows load, a real error occurs, or the view is gone
+            while vm.shows.isEmpty && vm.errorMessage == nil && !Task.isCancelled {
                 await vm.loadInitial()
             }
         }
