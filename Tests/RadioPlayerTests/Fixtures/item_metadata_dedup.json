@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "identifier": "OTRR_Abbott_Singles",
+    "identifier": "OTRR_Abbott_Costello_Singles",
     "title": "Abbott and Costello - Single Episodes",
     "creator": "NBC Radio",
     "date": "1940-07-31"
@@ -9,9 +9,10 @@
     {
       "name": "01 Abbott and Costello Audio Bio.mp3",
       "source": "original",
-      "format": "MP3 128 kbps",
+      "format": "VBR MP3",
       "size": "28672000",
-      "length": "359.0"
+      "length": "359.0",
+      "track": "01"
     },
     {
       "name": "01 Abbott and Costello Audio Bio.ogg",
@@ -21,12 +22,13 @@
       "length": "359.0"
     },
     {
-      "name": "AC_40-07-31_Guest_Madame_Lazonga.mp3",
+      "name": "Abbott and Costello 40-07-31 Guest - Madame Lazonga.mp3",
       "source": "original",
-      "format": "MP3 128 kbps",
+      "format": "VBR MP3",
       "size": "104857600",
       "length": "1749.0",
-      "title": "Guest - Madame Lazonga"
+      "title": "Guest - Madame Lazonga",
+      "track": "02"
     },
     {
       "name": "Abbott and Costello 40-07-31 Guest - Madame Lazonga.ogg",
@@ -36,10 +38,19 @@
       "length": "1749.0"
     },
     {
-      "name": "Abbott and Costello 40-10-15 Bank Robbery.mp3",
+      "name": "Abbott and Costello 42-10-15 Bank Robbery with Marlene Dietrich.mp3",
       "source": "original",
-      "format": "MP3 128 kbps",
+      "format": "VBR MP3",
       "size": "106954752",
+      "length": "1778.0",
+      "title": "Bank Robbery with Marlene Dietrich",
+      "track": "03"
+    },
+    {
+      "name": "Abbott and Costello 42-10-15 Bank Robbery with Marlene Dietrich.ogg",
+      "source": "derivative",
+      "format": "Ogg Vorbis",
+      "size": "68681728",
       "length": "1778.0"
     },
     {

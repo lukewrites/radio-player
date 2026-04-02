@@ -103,22 +103,31 @@ public final class ShowDetailViewModel {
     }
 
     /// Human-readable title: uses explicit title field or cleans the filename.
+    /// In both cases, strips any embedded date prefix (e.g. "JB 1943-10-10 ").
     private func cleanedTitle(for file: ArchiveFile, showTitle: String) -> String {
-        if let title = file.title, !title.isEmpty { return title }
-        var name = (file.name as NSString).deletingPathExtension
-        name = name.replacingOccurrences(of: "_", with: " ")
-        // Strip leading track number
-        name = name.replacing(#/^\d+\s+/#, with: "")
-        // Strip show name prefix (case-insensitive)
-        var lower = name.lowercased()
-        stripShowPrefix(from: &lower, showTitle: showTitle.lowercased())
-        if lower.count < name.count {
-            name = String(name.suffix(lower.count))
+        var name = file.title?.isEmpty == false
+            ? file.title!
+            : (file.name as NSString).deletingPathExtension.replacingOccurrences(of: "_", with: " ")
+
+        // Strip everything up to and including a date (YY-MM-DD / YYYY-MM-DD),
+        // plus any optional episode marker like (xxx) that follows.
+        // e.g. "JB 1943-10-10 Casablanca" → "Casablanca"
+        // e.g. "Halls of Ivy 49-06-22 (xxx) Title" → "Title"
+        let afterDate = name.replacing(#/^.*?\d{2,4}-\d{2}-\d{2}\s*(?:\(\w+\)\s*)?/#, with: "")
+        if !afterDate.isEmpty, afterDate != name {
+            name = afterDate
+        } else {
+            // No date found — strip leading track number and show name prefix
+            name = name.replacing(#/^\d+\s+/#, with: "")
+            var lower = name.lowercased()
+            stripShowPrefix(from: &lower, showTitle: showTitle.lowercased())
+            if lower.count < name.count {
+                name = String(name.suffix(lower.count))
+            }
         }
-        // Strip date prefix
-        name = name.replacing(#/^\d{2,4}-\d{2}-\d{2}\s*/#, with: "")
+
         let cleaned = name.trimmingCharacters(in: .init(charactersIn: " _-"))
-        return cleaned.isEmpty ? file.name : cleaned
+        return cleaned.isEmpty ? (file.title ?? file.name) : cleaned
     }
 
     /// Strips a show name prefix from `name` in place. Tries the short name

@@ -1,0 +1,61 @@
+{
+  "metadata": {
+    "identifier": "OTRR_Jack_Benny_Singles_1943-1944",
+    "title": "Jack Benny - Single Episodes - 1943-1944",
+    "creator": "NBC Radio",
+    "date": "1943-10-10"
+  },
+  "files": [
+    {
+      "name": "JB 1943-10-10 Jack's African trip 1st Show of Season.mp3",
+      "source": "original",
+      "format": "VBR MP3",
+      "size": "29360128",
+      "length": "1800.0",
+      "title": "JB 1943-10-10 Jack's African trip 1st Show of Season"
+    },
+    {
+      "name": "JB 1943-10-10 Jack's African trip 1st Show of Season.ogg",
+      "source": "derivative",
+      "format": "Ogg Vorbis",
+      "size": "18874368",
+      "length": "1800.0"
+    },
+    {
+      "name": "JB 1943-10-17 Casablanca.mp3",
+      "source": "original",
+      "format": "VBR MP3",
+      "size": "29622272",
+      "length": "1815.0",
+      "title": "JB 1943-10-17 Casablanca"
+    },
+    {
+      "name": "JB 1943-10-17 Casablanca.ogg",
+      "source": "derivative",
+      "format": "Ogg Vorbis",
+      "size": "19005440",
+      "length": "1815.0"
+    },
+    {
+      "name": "JB 1943-10-24 Algiers.mp3",
+      "source": "original",
+      "format": "VBR MP3",
+      "size": "28835840",
+      "length": "1768.0",
+      "title": "JB 1943-10-24 Algiers"
+    },
+    {
+      "name": "JB 1943-10-24 Algiers.ogg",
+      "source": "derivative",
+      "format": "Ogg Vorbis",
+      "size": "18481152",
+      "length": "1768.0"
+    },
+    {
+      "name": "__ia_thumb.jpg",
+      "source": "original",
+      "format": "JPEG Thumb",
+      "size": "5432"
+    }
+  ]
+}
