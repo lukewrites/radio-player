@@ -17,6 +17,7 @@ struct ShowDetailView: View {
     @State private var viewModel: ShowDetailViewModel?
     @State private var show: Show?
     @State private var selectedFilter: EpisodeStatus?
+    @State private var showingInfo = false
 
     // Init from collection browser (SearchDoc)
     init(doc: SearchDoc) {
@@ -60,10 +61,21 @@ struct ShowDetailView: View {
                                 }
 
                                 if let desc = displayDescription {
-                                    Text(stripHTML(desc) ?? desc)
-                                        .font(.caption)
-                                        .foregroundStyle(.secondary)
-                                        .lineLimit(3)
+                                    HStack(alignment: .top, spacing: 4) {
+                                        Text(stripHTML(desc) ?? desc)
+                                            .font(.caption)
+                                            .foregroundStyle(.secondary)
+                                            .lineLimit(2)
+
+                                        Button {
+                                            showingInfo = true
+                                        } label: {
+                                            Image(systemName: "info.circle")
+                                                .font(.caption)
+                                                .foregroundStyle(.secondary)
+                                        }
+                                        .accessibilityLabel("Show description")
+                                    }
                                 }
                             }
                         }
@@ -139,7 +151,19 @@ struct ShowDetailView: View {
                 }
             }
         }
-        .task {
+        .sheet(isPresented: $showingInfo) {
+            ShowInfoSheet(
+                title: displayTitle,
+                creator: displayCreator,
+                description: displayDescription.map { stripHTML($0) ?? $0 }
+            )
+        }
+        // id: identifier resets all @State when the selected show changes,
+        // so episodes and thumbnail never bleed from one show into another.
+        .task(id: identifier) {
+            viewModel = nil
+            show = nil
+            selectedFilter = nil
             await setupShow()
         }
     }

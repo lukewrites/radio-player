@@ -144,6 +144,37 @@ struct CollectionBrowserViewModelTests {
 
         #expect(vm2.errorMessage == nil, "CancellationError should not surface as a user-visible error")
     }
+
+    // MARK: - Collection switching (stale-state regression)
+
+    @Test("new viewModel for a different collection starts empty")
+    func switchingCollectionStartsEmpty() async throws {
+        let data = try loadFixture("search_response")
+        let api = ArchiveAPI(session: MockURLSession(data: data))
+
+        let vmA = CollectionBrowserViewModel(collection: .oldTimeRadio, api: api)
+        await vmA.loadInitial()
+        #expect(vmA.shows.count == 2)
+
+        // Switching collection must create a fresh viewModel — no stale shows from previous collection
+        let vmB = CollectionBrowserViewModel(collection: .otrrComedy, api: api)
+        #expect(vmB.shows.isEmpty, "New viewModel for a different collection must start with no shows")
+    }
+
+    @Test("loadInitial on new collection loads its own shows, not the previous collection's")
+    func switchingCollectionLoadsCorrectShows() async throws {
+        let data = try loadFixture("search_response")
+        let api = ArchiveAPI(session: MockURLSession(data: data))
+
+        let vmA = CollectionBrowserViewModel(collection: .oldTimeRadio, api: api)
+        await vmA.loadInitial()
+
+        let vmB = CollectionBrowserViewModel(collection: .otrrComedy, api: api)
+        await vmB.loadInitial()
+
+        #expect(vmB.shows.count == 2)
+        #expect(vmA.shows.count == 2, "Original viewModel should be unaffected")
+    }
 }
 
 // MARK: - Test Helpers

@@ -80,14 +80,13 @@ struct CollectionBrowserView: View {
         .navigationDestination(for: SearchDoc.self) { doc in
             ShowDetailView(doc: doc)
         }
-        .task {
-            if viewModel == nil {
-                viewModel = CollectionBrowserViewModel(collection: collection, api: api)
-            }
-            guard let vm = viewModel, vm.shows.isEmpty && !vm.isLoading else { return }
+        // id: collection resets the viewModel whenever the selected category changes,
+        // so switching sidebar rows always loads the correct collection's shows.
+        .task(id: collection) {
+            viewModel = CollectionBrowserViewModel(collection: collection, api: api)
             // Unstructured task: not tied to view lifecycle, so NavigationSplitView
             // transitions can't cancel the load mid-flight.
-            Task { await vm.loadInitial() }
+            Task { await viewModel?.loadInitial() }
         }
     }
 }

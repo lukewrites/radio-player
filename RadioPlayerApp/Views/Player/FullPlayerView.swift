@@ -84,10 +84,19 @@ struct FullPlayerView: View {
                 .pickerStyle(.segmented)
                 .padding(.horizontal)
 
+                // AirPlay
+                HStack {
+                    Spacer()
+                    AirPlayButton()
+                        .frame(width: 36, height: 36)
+                    Spacer()
+                }
+
                 // Sleep timer
                 sleepTimerRow
+                    .padding(.bottom, 16)
 
-                Spacer()
+                Spacer(minLength: 0)
             }
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {

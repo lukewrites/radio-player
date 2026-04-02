@@ -1,4 +1,5 @@
 import SwiftUI
+import RadioPlayer
 
 /// Loads a remote image asynchronously with an in-memory cache.
 /// Falls back to StylizedCoverView if the load fails.
@@ -20,19 +21,26 @@ struct AsyncCachedImage: View {
                     .clipShape(RoundedRectangle(cornerRadius: size * 0.12))
             } else {
                 StylizedCoverView(title: title, size: size)
-                    .task(id: url) {
-                        await loadImage()
-                    }
             }
+        }
+        // Task lives on the outer Group so it fires even when an image is already
+        // displayed. Resetting image = nil clears any stale thumbnail from a
+        // previous URL before loading the new one.
+        .task(id: url) {
+            image = nil
+            await loadImage()
         }
     }
 
     private func loadImage() async {
         guard !loading, let url else { return }
 
-        // Check in-memory cache first
         if let cached = ImageCache.shared[url] {
-            image = cached
+            #if os(macOS)
+            if let nsImage = NSImage(data: cached) { image = Image(nsImage: nsImage) }
+            #else
+            if let uiImage = UIImage(data: cached) { image = Image(uiImage: uiImage) }
+            #endif
             return
         }
 
@@ -41,38 +49,14 @@ struct AsyncCachedImage: View {
 
         do {
             let (data, _) = try await URLSession.shared.data(from: url)
+            ImageCache.shared[url] = data
             #if os(macOS)
-            if let nsImage = NSImage(data: data) {
-                let result = Image(nsImage: nsImage)
-                ImageCache.shared[url] = result
-                image = result
-            }
+            if let nsImage = NSImage(data: data) { image = Image(nsImage: nsImage) }
             #else
-            if let uiImage = UIImage(data: data) {
-                let result = Image(uiImage: uiImage)
-                ImageCache.shared[url] = result
-                image = result
-            }
+            if let uiImage = UIImage(data: data) { image = Image(uiImage: uiImage) }
             #endif
         } catch {
             // Silently fall back to StylizedCoverView
-        }
-    }
-}
-
-// MARK: - Simple in-memory image cache
-
-final class ImageCache: @unchecked Sendable {
-    static let shared = ImageCache()
-    private var store: [URL: Image] = [:]
-    private let lock = NSLock()
-
-    subscript(url: URL) -> Image? {
-        get {
-            lock.withLock { store[url] }
-        }
-        set {
-            lock.withLock { store[url] = newValue }
         }
     }
 }

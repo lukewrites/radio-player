@@ -20,6 +20,7 @@
 		A1000000B000000000000000B /* EpisodeRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000000D000000000000000D; };
 		A1000000C000000000000000C /* MiniPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000000E000000000000000E; };
 		A1000000D000000000000000D /* FullPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000000F000000000000000F; };
+		AB0000020000000000000002 /* AirPlayButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB0000010000000000000001; };
 		A1000000E000000000000000E /* LibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000010000000000000010; };
 		T30000010000000000000001 /* AppTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = T20000010000000000000001; };
 		T30000020000000000000002 /* ThemeKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = T20000020000000000000002; };
@@ -27,6 +28,7 @@
 		T30000040000000000000004 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = T20000040000000000000004; };
 		NV0000020000000000000002 /* SidebarDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = NV0000010000000000000001; };
 		NV0000050000000000000005 /* FavoritesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = NV0000040000000000000004; };
+		SI0000010000000000000001 /* ShowInfoSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = SI0000020000000000000002; };
 		FF0000020000000000000002 /* UITestMockURLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF0000010000000000000001; };
 		FF0000080000000000000008 /* AppLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF0000050000000000000005; };
 		FF0000090000000000000009 /* NavigationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF0000060000000000000006; };
@@ -50,6 +52,7 @@
 		A2000000D000000000000000D /* EpisodeRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EpisodeRowView.swift; sourceTree = "<group>"; };
 		A2000000E000000000000000E /* MiniPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniPlayerView.swift; sourceTree = "<group>"; };
 		A2000000F000000000000000F /* FullPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullPlayerView.swift; sourceTree = "<group>"; };
+		AB0000010000000000000001 /* AirPlayButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirPlayButton.swift; sourceTree = "<group>"; };
 		A20000010000000000000010 /* LibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryView.swift; sourceTree = "<group>"; };
 		T20000010000000000000001 /* AppTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTheme.swift; sourceTree = "<group>"; };
 		T20000020000000000000002 /* ThemeKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeKey.swift; sourceTree = "<group>"; };
@@ -57,6 +60,7 @@
 		T20000040000000000000004 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		NV0000010000000000000001 /* SidebarDestination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarDestination.swift; sourceTree = "<group>"; };
 		NV0000040000000000000004 /* FavoritesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesView.swift; sourceTree = "<group>"; };
+		SI0000020000000000000002 /* ShowInfoSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowInfoSheet.swift; sourceTree = "<group>"; };
 		FF0000010000000000000001 /* UITestMockURLSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITestMockURLSession.swift; sourceTree = "<group>"; };
 		FF0000040000000000000004 /* RadioPlayerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RadioPlayerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		FF0000050000000000000005 /* AppLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLaunchTests.swift; sourceTree = "<group>"; };
@@ -185,6 +189,7 @@
 				A2000000B000000000000000B /* ShowCardView.swift */,
 				A2000000C000000000000000C /* ShowDetailView.swift */,
 				NV0000040000000000000004 /* FavoritesView.swift */,
+				SI0000020000000000000002 /* ShowInfoSheet.swift */,
 			);
 			path = Views/Shows;
 			sourceTree = "<group>";
@@ -202,6 +207,7 @@
 			children = (
 				A2000000E000000000000000E /* MiniPlayerView.swift */,
 				A2000000F000000000000000F /* FullPlayerView.swift */,
+				AB0000010000000000000001 /* AirPlayButton.swift */,
 			);
 			path = Views/Player;
 			sourceTree = "<group>";
@@ -347,6 +353,7 @@
 				A1000000B000000000000000B /* EpisodeRowView.swift in Sources */,
 				A1000000C000000000000000C /* MiniPlayerView.swift in Sources */,
 				A1000000D000000000000000D /* FullPlayerView.swift in Sources */,
+				AB0000020000000000000002 /* AirPlayButton.swift in Sources */,
 				A1000000E000000000000000E /* LibraryView.swift in Sources */,
 				T30000010000000000000001 /* AppTheme.swift in Sources */,
 				T30000020000000000000002 /* ThemeKey.swift in Sources */,
@@ -354,6 +361,7 @@
 				T30000040000000000000004 /* SettingsView.swift in Sources */,
 				NV0000020000000000000002 /* SidebarDestination.swift in Sources */,
 				NV0000050000000000000005 /* FavoritesView.swift in Sources */,
+				SI0000010000000000000001 /* ShowInfoSheet.swift in Sources */,
 				FF0000020000000000000002 /* UITestMockURLSession.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
