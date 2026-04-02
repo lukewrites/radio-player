@@ -18,13 +18,17 @@ final class PlayerTests: XCTestCase {
     }
 
     private func navigateToCollectionBrowser() {
-        // If on sidebar, tap "All Shows" to go to collection browser
-        let backButton = app.navigationBars.buttons["Radio Player"]
-        if backButton.waitForExistence(timeout: 2) {
-            backButton.tap()
+        // If already on the All Shows collection browser, nothing to do.
+        // The app launches with selectedCollection = .oldTimeRadio, so compact
+        // NavigationSplitView may already be showing the collection browser.
+        // Navigating back then re-tapping an already-selected sidebar item does
+        // not trigger re-navigation in compact mode, so we skip the round-trip.
+        if app.navigationBars["All Shows"].waitForExistence(timeout: 3) {
+            return
         }
+        // Otherwise we are on the sidebar — tap All Shows to navigate there.
         let row = app.staticTexts["All Shows"]
-        if row.waitForExistence(timeout: 3) {
+        if row.waitForExistence(timeout: 5) {
             row.tap()
         }
     }
