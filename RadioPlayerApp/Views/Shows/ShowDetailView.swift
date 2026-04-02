@@ -141,11 +141,6 @@ struct ShowDetailView: View {
                         .accessibilityLabel(show?.isFavorite == true ? "Remove from Favorites" : "Add to Favorites")
                     }
                 }
-                .task {
-                    if vm.episodes.isEmpty {
-                        await vm.loadEpisodes()
-                    }
-                }
                 .refreshable {
                     await vm.loadEpisodes()
                 }
@@ -171,7 +166,9 @@ struct ShowDetailView: View {
     private func setupShow() async {
         if let preloaded = preloadedShow {
             show = preloaded
-            viewModel = ShowDetailViewModel(show: preloaded, api: api, modelContext: modelContext)
+            let vm = ShowDetailViewModel(show: preloaded, api: api, modelContext: modelContext)
+            viewModel = vm
+            await vm.loadEpisodes()
             return
         }
 
@@ -191,6 +188,8 @@ struct ShowDetailView: View {
         }
 
         show = showRecord
-        viewModel = ShowDetailViewModel(show: showRecord, api: api, modelContext: modelContext)
+        let vm = ShowDetailViewModel(show: showRecord, api: api, modelContext: modelContext)
+        viewModel = vm
+        await vm.loadEpisodes()
     }
 }
