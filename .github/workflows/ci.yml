@@ -45,55 +45,12 @@ jobs:
       - name: Select Xcode
         run: sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
 
-      - name: Show available schemes and SDKs
-        run: |
-          echo "=== Schemes ==="
-          xcodebuild -project RadioPlayerApp.xcodeproj -list
-          echo "=== SDKs ==="
-          xcodebuild -showsdks | grep -E "iphoneos|iphonesimulator"
-
-      - name: List available simulators
-        run: xcrun simctl list devices available
-
-      - name: Select latest available iPhone simulator
-        id: sim
-        shell: bash
-        run: |
-          set -euo pipefail
-          DEVICES_JSON="$(xcrun simctl list devices available -j)"
-          UDID="$(
-            ruby -rjson -e '
-              data = JSON.parse(STDIN.read)
-              devs = data["devices"].values.flatten.select { |d|
-                d["isAvailable"] && d["name"].start_with?("iPhone")
-              }
-              scored = devs.map { |d|
-                m = d["name"].match(/^iPhone\s+(\d+)/)
-                next nil unless m
-                n = m[1].to_i
-                pro_bonus = (d["name"].include?("Pro") ? 1 : 0)
-                max_bonus = (d["name"].include?("Max") ? 1 : 0)
-                [n, pro_bonus, max_bonus, d]
-              }.compact
-              best = scored.max_by { |n, pro, max, d| [n, pro, max] }
-              puts(best[3]["udid"]) if best
-            ' <<< "$DEVICES_JSON"
-          )"
-          if [ -z "${UDID:-}" ]; then
-            echo "No numeric iPhone simulator found. Available devices:"
-            xcrun simctl list devices available
-            exit 1
-          fi
-          echo "Using simulator UDID: $UDID"
-          echo "udid=$UDID" >> "$GITHUB_OUTPUT"
-          xcrun simctl bootstatus "$UDID" -b || true
-
       - name: Build for iOS Simulator
         run: |
           xcodebuild \
             -project RadioPlayerApp.xcodeproj \
             -scheme RadioPlayerApp \
-            -destination "id=${{ steps.sim.outputs.udid }}" \
+            -destination 'generic/platform=iOS Simulator' \
             -configuration Debug \
             CODE_SIGNING_ALLOWED=NO \
             build
@@ -107,45 +64,19 @@ jobs:
       - name: Select Xcode
         run: sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
 
-      - name: Select latest available iPhone simulator
+      - name: Select available iPhone simulator
         id: sim
-        shell: bash
         run: |
-          set -euo pipefail
-          DEVICES_JSON="$(xcrun simctl list devices available -j)"
-          UDID="$(
-            ruby -rjson -e '
-              data = JSON.parse(STDIN.read)
-              devs = data["devices"].values.flatten.select { |d|
-                d["isAvailable"] && d["name"].start_with?("iPhone")
-              }
-              scored = devs.map { |d|
-                m = d["name"].match(/^iPhone\s+(\d+)/)
-                next nil unless m
-                n = m[1].to_i
-                pro_bonus = (d["name"].include?("Pro") ? 1 : 0)
-                max_bonus = (d["name"].include?("Max") ? 1 : 0)
-                [n, pro_bonus, max_bonus, d]
-              }.compact
-              best = scored.max_by { |n, pro, max, d| [n, pro, max] }
-              puts(best[3]["udid"]) if best
-            ' <<< "$DEVICES_JSON"
-          )"
-          if [ -z "${UDID:-}" ]; then
-            echo "No numeric iPhone simulator found. Available devices:"
-            xcrun simctl list devices available
-            exit 1
-          fi
-          echo "Using simulator UDID: $UDID"
-          echo "udid=$UDID" >> "$GITHUB_OUTPUT"
-          xcrun simctl bootstatus "$UDID" -b || true
+          SIM_NAME=$(xcrun simctl list devices available | grep -oE 'iPhone [0-9]+[^(]*' | sort -t' ' -k2 -rn | head -1 | xargs)
+          echo "Selected simulator: $SIM_NAME"
+          echo "name=$SIM_NAME" >> "$GITHUB_OUTPUT"
 
       - name: Run UI Tests
         run: |
           xcodebuild test \
             -project RadioPlayerApp.xcodeproj \
             -scheme RadioPlayerApp \
-            -destination "id=${{ steps.sim.outputs.udid }}" \
+            -destination 'platform=iOS Simulator,name=${{ steps.sim.outputs.name }},OS=latest' \
             -only-testing:RadioPlayerUITests \
             CODE_SIGNING_ALLOWED=NO
 
