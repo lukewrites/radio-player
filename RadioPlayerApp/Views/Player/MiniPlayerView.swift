@@ -44,6 +44,7 @@ struct MiniPlayerView: View {
                     Image(systemName: player.isPlaying ? "pause.fill" : "play.fill")
                         .font(.title2)
                 }
+                .accessibilityLabel(player.isPlaying ? "Pause" : "Play")
 
                 Button {
                     player.skipForward()
@@ -70,6 +71,7 @@ struct MiniPlayerView: View {
                 .frame(height: 2)
             }
         }
+        .accessibilityIdentifier("miniPlayer")
         .onTapGesture { showFullPlayer = true }
         .sheet(isPresented: $showFullPlayer) {
             FullPlayerView()

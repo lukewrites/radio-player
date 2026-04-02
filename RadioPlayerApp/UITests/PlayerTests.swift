@@ -51,10 +51,8 @@ final class PlayerTests: XCTestCase {
     }
 
     func testShowCardNavigatesToEpisodeList() {
-        // Navigate to collection browser and tap a show
         navigateToCollectionBrowser()
 
-        // Show cards have accessibilityLabel set to the show title — use buttons[]
         let dragnet = app.buttons["Dragnet: Big Crime"]
         guard dragnet.waitForExistence(timeout: 12) else {
             XCTFail("Show card button 'Dragnet: Big Crime' not found in mock data")
@@ -62,15 +60,138 @@ final class PlayerTests: XCTestCase {
         }
         dragnet.tap()
 
-        // Wait for ShowDetailView navigation bar to confirm navigation succeeded
         guard app.navigationBars["Dragnet: Big Crime"].waitForExistence(timeout: 8) else {
             XCTFail("Did not navigate to ShowDetailView — nav bar 'Dragnet: Big Crime' not found")
             return
         }
 
-        // Episode list should appear (mock metadata has 2 MP3 files)
-        let episode = app.staticTexts["The Big Crime"]
-        XCTAssertTrue(episode.waitForExistence(timeout: 8),
+        XCTAssertTrue(app.staticTexts["The Big Crime"].waitForExistence(timeout: 8),
                       "Episode 'The Big Crime' should appear after tapping show")
+    }
+
+    // MARK: - Playback
+
+    /// Tapping an episode row must show the mini player.
+    /// This verifies the full tap → play → currentEpisode set → MiniPlayerView appears chain.
+    func testTappingEpisodeShowsMiniPlayer() {
+        navigateToCollectionBrowser()
+
+        let dragnet = app.buttons["Dragnet: Big Crime"]
+        guard dragnet.waitForExistence(timeout: 12) else {
+            XCTFail("Show card not found")
+            return
+        }
+        dragnet.tap()
+
+        guard app.staticTexts["The Big Crime"].waitForExistence(timeout: 10) else {
+            XCTFail("Episode list did not load")
+            return
+        }
+
+        // Tap the episode row — onTapGesture triggers onPlay
+        app.staticTexts["The Big Crime"].firstMatch.tap()
+
+        XCTAssertTrue(
+            app.otherElements["miniPlayer"].waitForExistence(timeout: 5),
+            "Mini player should appear after tapping an episode"
+        )
+    }
+
+    /// Tapping the mini player must open the full player sheet.
+    func testMiniPlayerTapOpenFullPlayer() {
+        navigateToCollectionBrowser()
+
+        let dragnet = app.buttons["Dragnet: Big Crime"]
+        guard dragnet.waitForExistence(timeout: 12) else {
+            XCTFail("Show card not found")
+            return
+        }
+        dragnet.tap()
+
+        guard app.staticTexts["The Big Crime"].waitForExistence(timeout: 10) else {
+            XCTFail("Episode list did not load")
+            return
+        }
+
+        app.staticTexts["The Big Crime"].firstMatch.tap()
+
+        let miniPlayer = app.otherElements["miniPlayer"]
+        guard miniPlayer.waitForExistence(timeout: 5) else {
+            XCTFail("Mini player did not appear")
+            return
+        }
+        miniPlayer.tap()
+
+        // Full player has a Done button in the toolbar
+        XCTAssertTrue(
+            app.buttons["Done"].waitForExistence(timeout: 5),
+            "Full player should open when tapping the mini player"
+        )
+    }
+
+    /// Full player must show the sleep timer Set button.
+    func testFullPlayerShowsSleepTimerSetButton() {
+        navigateToCollectionBrowser()
+
+        let dragnet = app.buttons["Dragnet: Big Crime"]
+        guard dragnet.waitForExistence(timeout: 12) else {
+            XCTFail("Show card not found")
+            return
+        }
+        dragnet.tap()
+
+        guard app.staticTexts["The Big Crime"].waitForExistence(timeout: 10) else {
+            XCTFail("Episode list did not load")
+            return
+        }
+
+        app.staticTexts["The Big Crime"].firstMatch.tap()
+
+        let miniPlayer = app.otherElements["miniPlayer"]
+        guard miniPlayer.waitForExistence(timeout: 5) else {
+            XCTFail("Mini player did not appear")
+            return
+        }
+        miniPlayer.tap()
+
+        XCTAssertTrue(
+            app.buttons["Set"].waitForExistence(timeout: 5),
+            "Full player should show 'Set' button for sleep timer"
+        )
+    }
+
+    /// Full player must show all speed options.
+    func testFullPlayerShowsSpeedOptions() {
+        navigateToCollectionBrowser()
+
+        let dragnet = app.buttons["Dragnet: Big Crime"]
+        guard dragnet.waitForExistence(timeout: 12) else {
+            XCTFail("Show card not found")
+            return
+        }
+        dragnet.tap()
+
+        guard app.staticTexts["The Big Crime"].waitForExistence(timeout: 10) else {
+            XCTFail("Episode list did not load")
+            return
+        }
+
+        app.staticTexts["The Big Crime"].firstMatch.tap()
+
+        let miniPlayer = app.otherElements["miniPlayer"]
+        guard miniPlayer.waitForExistence(timeout: 5) else {
+            XCTFail("Mini player did not appear")
+            return
+        }
+        miniPlayer.tap()
+
+        guard app.buttons["Done"].waitForExistence(timeout: 5) else {
+            XCTFail("Full player did not open")
+            return
+        }
+
+        XCTAssertTrue(app.buttons["1×"].waitForExistence(timeout: 3), "1× speed option should be visible")
+        XCTAssertTrue(app.buttons["1.5×"].waitForExistence(timeout: 3), "1.5× speed option should be visible")
+        XCTAssertTrue(app.buttons["2×"].waitForExistence(timeout: 3), "2× speed option should be visible")
     }
 }

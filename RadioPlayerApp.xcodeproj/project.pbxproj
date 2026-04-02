@@ -34,6 +34,9 @@
 		FF0000090000000000000009 /* NavigationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF0000060000000000000006; };
 		FF000000A000000000000000A /* PlayerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF0000070000000000000007; };
 		FF0000140000000000000014 /* DebugTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF0000130000000000000013; };
+		SS0000010000000000000001 /* ShowSwitchingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = SS0000020000000000000002; };
+		SS0000030000000000000003 /* FavoritesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = SS0000040000000000000004; };
+		SS0000050000000000000005 /* LibraryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = SS0000060000000000000006; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -67,6 +70,9 @@
 		FF0000060000000000000006 /* NavigationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationTests.swift; sourceTree = "<group>"; };
 		FF0000070000000000000007 /* PlayerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerTests.swift; sourceTree = "<group>"; };
 		FF0000130000000000000013 /* DebugTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugTests.swift; sourceTree = "<group>"; };
+		SS0000020000000000000002 /* ShowSwitchingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowSwitchingTests.swift; sourceTree = "<group>"; };
+		SS0000040000000000000004 /* FavoritesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesTests.swift; sourceTree = "<group>"; };
+		SS0000060000000000000006 /* LibraryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -121,6 +127,9 @@
 				FF0000060000000000000006 /* NavigationTests.swift */,
 				FF0000070000000000000007 /* PlayerTests.swift */,
 				FF0000130000000000000013 /* DebugTests.swift */,
+				SS0000020000000000000002 /* ShowSwitchingTests.swift */,
+				SS0000040000000000000004 /* FavoritesTests.swift */,
+				SS0000060000000000000006 /* LibraryTests.swift */,
 			);
 			path = RadioPlayerApp/UITests;
 			sourceTree = "<group>";
@@ -374,6 +383,9 @@
 				FF0000090000000000000009 /* NavigationTests.swift in Sources */,
 				FF000000A000000000000000A /* PlayerTests.swift in Sources */,
 				FF0000140000000000000014 /* DebugTests.swift in Sources */,
+				SS0000010000000000000001 /* ShowSwitchingTests.swift in Sources */,
+				SS0000030000000000000003 /* FavoritesTests.swift in Sources */,
+				SS0000050000000000000005 /* LibraryTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
