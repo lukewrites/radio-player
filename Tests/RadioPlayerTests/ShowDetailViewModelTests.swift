@@ -218,6 +218,167 @@ struct ShowDetailViewModelTests {
         #expect(vm.episodes.contains { $0.title == "Algiers" })
     }
 
+    // MARK: - Broadcast Date
+
+    @Test("parses broadcastDate from Dragnet filename (two-digit year)")
+    func broadcastDateFromDragnetFilename() async throws {
+        let data = try loadFixture("item_metadata")
+        let api = ArchiveAPI(session: MockURLSession(data: data))
+        let container = try makeContainer()
+        let context = ModelContext(container)
+
+        let show = Show(identifier: "OTRR_Dragnet_Singles", title: "Dragnet", collection: "oldtimeradio")
+        context.insert(show)
+        try context.save()
+
+        let vm = ShowDetailViewModel(show: show, api: api, modelContext: context)
+        await vm.loadEpisodes()
+
+        var cal = Calendar(identifier: .gregorian)
+        cal.timeZone = TimeZone(identifier: "UTC")!
+        let ep = vm.episodes.first { $0.filename == "Dragnet_49-09-17_Cop_Killing.mp3" }
+        let c = cal.dateComponents([.year, .month, .day], from: ep!.broadcastDate!)
+        #expect(c.year == 1949)
+        #expect(c.month == 9)
+        #expect(c.day == 17)
+    }
+
+    @Test("parses broadcastDate from Jack Benny title (four-digit year)")
+    func broadcastDateFromJackBennyTitle() async throws {
+        let data = try loadFixture("item_metadata_jackbenny")
+        let api = ArchiveAPI(session: MockURLSession(data: data))
+        let container = try makeContainer()
+        let context = ModelContext(container)
+
+        let show = Show(identifier: "OTRR_Jack_Benny_Singles_1943-1944", title: "Jack Benny - Single Episodes - 1943-1944", collection: "oldtimeradio")
+        context.insert(show)
+        try context.save()
+
+        let vm = ShowDetailViewModel(show: show, api: api, modelContext: context)
+        await vm.loadEpisodes()
+
+        var cal = Calendar(identifier: .gregorian)
+        cal.timeZone = TimeZone(identifier: "UTC")!
+        let casablanca = vm.episodes.first { $0.title == "Casablanca" }
+        let c = cal.dateComponents([.year, .month, .day], from: casablanca!.broadcastDate!)
+        #expect(c.year == 1943)
+        #expect(c.month == 10)
+        #expect(c.day == 17)
+    }
+
+    @Test("broadcastDate is nil for episode with no date in filename")
+    func broadcastDateNilWhenNoDate() async throws {
+        let data = try loadFixture("item_metadata_dedup")
+        let api = ArchiveAPI(session: MockURLSession(data: data))
+        let container = try makeContainer()
+        let context = ModelContext(container)
+
+        let show = Show(identifier: "OTRR_Abbott_Costello_Singles", title: "Abbott and Costello - Single Episodes", collection: "oldtimeradio")
+        context.insert(show)
+        try context.save()
+
+        let vm = ShowDetailViewModel(show: show, api: api, modelContext: context)
+        await vm.loadEpisodes()
+
+        let audioBio = vm.episodes.first { $0.title == "Audio Bio" }
+        #expect(audioBio?.broadcastDate == nil)
+    }
+
+    @Test("episodes sort by broadcastDate ascending (Jack Benny)")
+    func sortsByBroadcastDateAscending() async throws {
+        let data = try loadFixture("item_metadata_jackbenny")
+        let api = ArchiveAPI(session: MockURLSession(data: data))
+        let container = try makeContainer()
+        let context = ModelContext(container)
+
+        let show = Show(identifier: "OTRR_Jack_Benny_Singles_1943-1944", title: "Jack Benny - Single Episodes - 1943-1944", collection: "oldtimeradio")
+        context.insert(show)
+        try context.save()
+
+        let vm = ShowDetailViewModel(show: show, api: api, modelContext: context)
+        await vm.loadEpisodes()
+
+        let dates = vm.episodes.compactMap { $0.broadcastDate }
+        #expect(dates.count == 3)
+        #expect(dates == dates.sorted())
+        #expect(vm.episodes[0].title == "Jack's African trip 1st Show of Season")
+        #expect(vm.episodes[1].title == "Casablanca")
+        #expect(vm.episodes[2].title == "Algiers")
+    }
+
+    @Test("dated episodes sort before undated episodes")
+    func datedEpisodesSortFirst() async throws {
+        let data = try loadFixture("item_metadata_dedup")
+        let api = ArchiveAPI(session: MockURLSession(data: data))
+        let container = try makeContainer()
+        let context = ModelContext(container)
+
+        let show = Show(identifier: "OTRR_Abbott_Costello_Singles", title: "Abbott and Costello - Single Episodes", collection: "oldtimeradio")
+        context.insert(show)
+        try context.save()
+
+        let vm = ShowDetailViewModel(show: show, api: api, modelContext: context)
+        await vm.loadEpisodes()
+
+        // "Audio Bio" has no date → must appear after dated episodes
+        let audioBioIndex = vm.episodes.firstIndex { $0.title == "Audio Bio" }
+        #expect(audioBioIndex == vm.episodes.count - 1,
+                "Undated episode should sort after all dated episodes")
+    }
+
+    @Test("loads broadcastDate from override JSON when filename has no date")
+    func broadcastDateFromOverride() async throws {
+        let data = try loadFixture("item_metadata_nodates")
+        let api = ArchiveAPI(session: MockURLSession(data: data))
+        let container = try makeContainer()
+        let context = ModelContext(container)
+
+        let show = Show(identifier: "OTRR_NoDate_Show", title: "No Date Show", collection: "oldtimeradio")
+        context.insert(show)
+        try context.save()
+
+        let resolver = BroadcastDateResolver(overrides: [
+            "OTRR_NoDate_Show": [
+                "NoDate_Episode_001.mp3": "1950-03-15",
+                "NoDate_Episode_002.mp3": "1950-03-22"
+            ]
+        ])
+        let vm = ShowDetailViewModel(show: show, api: api, modelContext: context, dateResolver: resolver)
+        await vm.loadEpisodes()
+
+        var cal = Calendar(identifier: .gregorian)
+        cal.timeZone = TimeZone(identifier: "UTC")!
+        let ep1 = vm.episodes.first { $0.filename == "NoDate_Episode_001.mp3" }
+        let c = cal.dateComponents([.year, .month, .day], from: ep1!.broadcastDate!)
+        #expect(c.year == 1950)
+        #expect(c.month == 3)
+        #expect(c.day == 15)
+    }
+
+    @Test("broadcastDate not overwritten on reload when already set")
+    func broadcastDatePreservedOnReload() async throws {
+        let data = try loadFixture("item_metadata")
+        let api = ArchiveAPI(session: MockURLSession(data: data))
+        let container = try makeContainer()
+        let context = ModelContext(container)
+
+        let show = Show(identifier: "OTRR_Dragnet_Singles", title: "Dragnet", collection: "oldtimeradio")
+        context.insert(show)
+
+        // Pre-existing episode with a manually-set broadcastDate
+        let existing = Episode(filename: "Dragnet_49-09-17_Cop_Killing.mp3", format: "VBR MP3")
+        let manualDate = Date(timeIntervalSince1970: 0)
+        existing.broadcastDate = manualDate
+        show.episodes.append(existing)
+        try context.save()
+
+        let vm = ShowDetailViewModel(show: show, api: api, modelContext: context)
+        await vm.loadEpisodes()
+
+        let reloaded = vm.episodes.first { $0.filename == "Dragnet_49-09-17_Cop_Killing.mp3" }
+        #expect(reloaded?.broadcastDate == manualDate, "Existing broadcastDate should not be overwritten on reload")
+    }
+
     // MARK: - Filtering
 
     @Test("filteredEpisodes returns all when no filter set")

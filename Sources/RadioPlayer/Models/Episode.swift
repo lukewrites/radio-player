@@ -10,6 +10,9 @@ public final class Episode {
     public var fileSize: Int64?
     public var format: String
 
+    // Broadcast metadata
+    public var broadcastDate: Date?
+
     // Status tracking
     public var status: String
     public var playbackPosition: Double

@@ -1,0 +1,5 @@
+{
+  "_schema_version": 1,
+  "_description": "Manual broadcast date overrides. Keys are archive.org show identifiers. Values map exact filename (including extension) to YYYY-MM-DD date string. Add entries for shows whose filenames do not embed a date.",
+  "overrides": {}
+}

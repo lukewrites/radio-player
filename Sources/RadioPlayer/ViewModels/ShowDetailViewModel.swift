@@ -18,11 +18,14 @@ public final class ShowDetailViewModel {
     private let show: Show
     private let api: ArchiveAPI
     private let modelContext: ModelContext
+    private let dateResolver: BroadcastDateResolver
 
-    public init(show: Show, api: ArchiveAPI, modelContext: ModelContext) {
+    public init(show: Show, api: ArchiveAPI, modelContext: ModelContext,
+                dateResolver: BroadcastDateResolver = (try? .fromBundle()) ?? .init()) {
         self.show = show
         self.api = api
         self.modelContext = modelContext
+        self.dateResolver = dateResolver
     }
 
     public func loadEpisodes() async {
@@ -47,12 +50,17 @@ public final class ShowDetailViewModel {
 
             for file in deduped {
                 let cleanTitle = cleanedTitle(for: file, showTitle: show.title)
+                let resolved = dateResolver.resolve(filename: file.name, showIdentifier: show.identifier)
                 if let existing = existingByFilename[file.name] {
                     // Update metadata but preserve user state
                     existing.title = cleanTitle
                     existing.track = file.track ?? existing.track
                     existing.duration = file.length.flatMap(Double.init) ?? existing.duration
                     existing.fileSize = file.size.flatMap(Int64.init) ?? existing.fileSize
+                    // Don't overwrite a broadcastDate that was already set
+                    if existing.broadcastDate == nil {
+                        existing.broadcastDate = resolved
+                    }
                     result.append(existing)
                 } else {
                     let episode = Episode(filename: file.name, format: file.format ?? "Unknown")
@@ -60,19 +68,29 @@ public final class ShowDetailViewModel {
                     episode.track = file.track
                     episode.duration = file.length.flatMap(Double.init)
                     episode.fileSize = file.size.flatMap(Int64.init)
+                    episode.broadcastDate = resolved
                     show.episodes.append(episode)
                     result.append(episode)
                 }
             }
 
-            // Sort by track number, then cleaned title, then filename
+            // Sort by broadcastDate (ascending) when available, then track, then title
             result.sort { lhs, rhs in
-                if let lt = lhs.track, let rt = rhs.track, lt != rt {
+                switch (lhs.broadcastDate, rhs.broadcastDate) {
+                case let (l?, r?):
+                    return l < r
+                case (_?, nil):
+                    return true
+                case (nil, _?):
+                    return false
+                case (nil, nil):
+                    if let lt = lhs.track, let rt = rhs.track, lt != rt {
+                        return lt.localizedStandardCompare(rt) == .orderedAscending
+                    }
+                    let lt = lhs.title ?? lhs.filename
+                    let rt = rhs.title ?? rhs.filename
                     return lt.localizedStandardCompare(rt) == .orderedAscending
                 }
-                let lt = lhs.title ?? lhs.filename
-                let rt = rhs.title ?? rhs.filename
-                return lt.localizedStandardCompare(rt) == .orderedAscending
             }
 
             try modelContext.save()

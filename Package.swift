@@ -16,7 +16,10 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "RadioPlayer"
+            name: "RadioPlayer",
+            resources: [
+                .process("Resources")
+            ]
         ),
         .testTarget(
             name: "RadioPlayerTests",
