@@ -2,7 +2,7 @@ import Foundation
 import SwiftData
 
 @Model
-public final class Show {
+public final class Show: Hashable {
     @Attribute(.unique) public var identifier: String
     public var title: String
     public var creator: String?
@@ -19,6 +19,7 @@ public final class Show {
     public var thumbnailImageURL: URL? {
         URL(string: "https://archive.org/services/img/\(identifier)")
     }
+
 
     public init(identifier: String, title: String, collection: String) {
         self.identifier = identifier

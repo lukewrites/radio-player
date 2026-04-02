@@ -5,7 +5,7 @@ struct ContentView: View {
     @Environment(AudioPlayerService.self) private var player
     @Environment(NetworkMonitor.self) private var networkMonitor
     @Binding var currentTheme: AppTheme
-    @State private var selectedCollection: ArchiveCollection? = .oldTimeRadio
+    @State private var sidebarDestination: SidebarDestination? = .collection(.oldTimeRadio)
     @State private var selectedShow: SearchDoc?
 
     var body: some View {
@@ -54,38 +54,44 @@ struct ContentView: View {
 
     private var macLayout: some View {
         NavigationSplitView {
-            CollectionListView(selectedCollection: $selectedCollection, currentTheme: $currentTheme)
+            CollectionListView(selectedDestination: $sidebarDestination, currentTheme: $currentTheme)
         } content: {
-            if let collection = selectedCollection {
-                CollectionBrowserView(collection: collection, selectedShow: $selectedShow)
-            } else {
-                LibraryView()
-            }
+            contentColumn
         } detail: {
-            if let show = selectedShow {
-                ShowDetailView(doc: show)
-            } else {
-                ContentUnavailableView("Select a Show", systemImage: "waveform")
-            }
+            detailColumn
         }
     }
 
     private var iOSLayout: some View {
-        // iPhone uses compact split view; iPad gets three-column automatically
         NavigationSplitView {
-            CollectionListView(selectedCollection: $selectedCollection, currentTheme: $currentTheme)
+            CollectionListView(selectedDestination: $sidebarDestination, currentTheme: $currentTheme)
         } content: {
-            if let collection = selectedCollection {
-                CollectionBrowserView(collection: collection, selectedShow: $selectedShow)
-            } else {
-                LibraryView()
-            }
+            contentColumn
         } detail: {
-            if let show = selectedShow {
-                ShowDetailView(doc: show)
-            } else {
-                ContentUnavailableView("Select a Show", systemImage: "waveform")
-            }
+            detailColumn
+        }
+    }
+
+    @ViewBuilder
+    private var contentColumn: some View {
+        switch sidebarDestination {
+        case .collection(let collection):
+            CollectionBrowserView(collection: collection, selectedShow: $selectedShow)
+        case .favorites:
+            FavoritesView()
+        case .library:
+            LibraryView()
+        case nil:
+            ContentUnavailableView("Select a Category", systemImage: "sidebar.left")
+        }
+    }
+
+    @ViewBuilder
+    private var detailColumn: some View {
+        if let show = selectedShow {
+            ShowDetailView(doc: show)
+        } else {
+            ContentUnavailableView("Select a Show", systemImage: "waveform")
         }
     }
 }

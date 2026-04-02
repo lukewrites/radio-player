@@ -2,26 +2,29 @@ import SwiftUI
 import RadioPlayer
 
 struct CollectionListView: View {
-    @Binding var selectedCollection: ArchiveCollection?
+    @Binding var selectedDestination: SidebarDestination?
     @Binding var currentTheme: AppTheme
     @State private var showSettings = false
 
     var body: some View {
-        List(selection: $selectedCollection) {
+        List(selection: $selectedDestination) {
+            Label("Favorites", systemImage: "star.fill")
+                .tag(SidebarDestination.favorites)
+
             Section("Old Time Radio") {
                 ForEach(ArchiveCollection.allCases.filter { $0.category == .otrr }) { collection in
                     Label(collection.displayName, systemImage: collection.systemImage)
-                        .tag(collection)
+                        .tag(SidebarDestination.collection(collection))
                 }
             }
 
             Section("Other") {
                 ForEach(ArchiveCollection.allCases.filter { $0.category == .general }) { collection in
                     Label(collection.displayName, systemImage: collection.systemImage)
-                        .tag(collection)
+                        .tag(SidebarDestination.collection(collection))
                 }
                 Label("Library", systemImage: "square.and.arrow.down")
-                    .tag(Optional<ArchiveCollection>.none)
+                    .tag(SidebarDestination.library)
             }
         }
         .navigationTitle("Radio Player")

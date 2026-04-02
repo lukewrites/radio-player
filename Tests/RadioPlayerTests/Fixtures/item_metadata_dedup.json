@@ -1,0 +1,52 @@
+{
+  "metadata": {
+    "identifier": "OTRR_Abbott_Singles",
+    "title": "Abbott and Costello - Single Episodes",
+    "creator": "NBC Radio",
+    "date": "1940-07-31"
+  },
+  "files": [
+    {
+      "name": "01 Abbott and Costello Audio Bio.mp3",
+      "source": "original",
+      "format": "MP3 128 kbps",
+      "size": "28672000",
+      "length": "359.0"
+    },
+    {
+      "name": "01 Abbott and Costello Audio Bio.ogg",
+      "source": "derivative",
+      "format": "Ogg Vorbis",
+      "size": "18432000",
+      "length": "359.0"
+    },
+    {
+      "name": "AC_40-07-31_Guest_Madame_Lazonga.mp3",
+      "source": "original",
+      "format": "MP3 128 kbps",
+      "size": "104857600",
+      "length": "1749.0",
+      "title": "Guest - Madame Lazonga"
+    },
+    {
+      "name": "Abbott and Costello 40-07-31 Guest - Madame Lazonga.ogg",
+      "source": "derivative",
+      "format": "Ogg Vorbis",
+      "size": "67108864",
+      "length": "1749.0"
+    },
+    {
+      "name": "Abbott and Costello 40-10-15 Bank Robbery.mp3",
+      "source": "original",
+      "format": "MP3 128 kbps",
+      "size": "106954752",
+      "length": "1778.0"
+    },
+    {
+      "name": "__ia_thumb.jpg",
+      "source": "original",
+      "format": "JPEG Thumb",
+      "size": "5432"
+    }
+  ]
+}

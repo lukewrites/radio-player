@@ -3,7 +3,11 @@ import SwiftData
 import RadioPlayer
 
 struct ShowDetailView: View {
-    let doc: SearchDoc
+    private let identifier: String
+    private let displayTitle: String
+    private let displayCreator: String?
+    private let displayDescription: String?
+    private let preloadedShow: Show?
 
     @Environment(ArchiveAPI.self) private var api
     @Environment(AudioPlayerService.self) private var player
@@ -14,6 +18,24 @@ struct ShowDetailView: View {
     @State private var show: Show?
     @State private var selectedFilter: EpisodeStatus?
 
+    // Init from collection browser (SearchDoc)
+    init(doc: SearchDoc) {
+        self.identifier = doc.identifier
+        self.displayTitle = doc.title ?? doc.identifier
+        self.displayCreator = doc.creator?.first
+        self.displayDescription = doc.description
+        self.preloadedShow = nil
+    }
+
+    // Init from Favorites (Show already exists in SwiftData)
+    init(show: Show) {
+        self.identifier = show.identifier
+        self.displayTitle = show.title
+        self.displayCreator = show.creator
+        self.displayDescription = show.showDescription
+        self.preloadedShow = show
+    }
+
     var body: some View {
         Group {
             if let vm = viewModel {
@@ -22,22 +44,22 @@ struct ShowDetailView: View {
                     Section {
                         HStack(spacing: 16) {
                             AsyncCachedImage(
-                                url: URL(string: "https://archive.org/services/img/\(doc.identifier)"),
-                                title: doc.title ?? doc.identifier,
+                                url: URL(string: "https://archive.org/services/img/\(identifier)"),
+                                title: displayTitle,
                                 size: 100
                             )
 
                             VStack(alignment: .leading, spacing: 6) {
-                                Text(doc.title ?? doc.identifier)
+                                Text(displayTitle)
                                     .font(.headline)
 
-                                if let creator = doc.creator?.first {
+                                if let creator = displayCreator {
                                     Text(creator)
                                         .font(.subheadline)
                                         .foregroundStyle(.secondary)
                                 }
 
-                                if let desc = doc.description {
+                                if let desc = displayDescription {
                                     Text(stripHTML(desc) ?? desc)
                                         .font(.caption)
                                         .foregroundStyle(.secondary)
@@ -94,7 +116,19 @@ struct ShowDetailView: View {
                         }
                     }
                 }
-                .navigationTitle(doc.title ?? doc.identifier)
+                .navigationTitle(displayTitle)
+                .toolbar {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button {
+                            show?.isFavorite.toggle()
+                            try? modelContext.save()
+                        } label: {
+                            Image(systemName: show?.isFavorite == true ? "star.fill" : "star")
+                                .foregroundStyle(show?.isFavorite == true ? .yellow : .primary)
+                        }
+                        .accessibilityLabel(show?.isFavorite == true ? "Remove from Favorites" : "Add to Favorites")
+                    }
+                }
                 .task {
                     if vm.episodes.isEmpty {
                         await vm.loadEpisodes()
@@ -111,8 +145,12 @@ struct ShowDetailView: View {
     }
 
     private func setupShow() async {
-        // Fetch or create the Show record in SwiftData
-        let identifier = doc.identifier
+        if let preloaded = preloadedShow {
+            show = preloaded
+            viewModel = ShowDetailViewModel(show: preloaded, api: api, modelContext: modelContext)
+            return
+        }
+
         let descriptor = FetchDescriptor<Show>(predicate: #Predicate { $0.identifier == identifier })
         let existing = try? modelContext.fetch(descriptor)
 
@@ -120,11 +158,9 @@ struct ShowDetailView: View {
         if let found = existing?.first {
             showRecord = found
         } else {
-            let new = Show(identifier: identifier, title: doc.title ?? identifier, collection: doc.identifier)
-            new.creator = doc.creator?.first
-            new.showDescription = doc.description
-            new.date = doc.date
-            new.downloads = doc.downloads ?? 0
+            let new = Show(identifier: identifier, title: displayTitle, collection: identifier)
+            new.creator = displayCreator
+            new.showDescription = displayDescription
             modelContext.insert(new)
             try? modelContext.save()
             showRecord = new

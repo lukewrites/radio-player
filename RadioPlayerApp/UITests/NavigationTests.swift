@@ -98,6 +98,12 @@ final class NavigationTests: XCTestCase {
                       "Mystery & Detective genre row should be visible in sidebar")
     }
 
+    func testFavoritesRowVisibleInSidebar() {
+        navigateToSidebarIfNeeded()
+        XCTAssertTrue(app.staticTexts["Favorites"].waitForExistence(timeout: 5),
+                      "Favorites row should be visible in sidebar")
+    }
+
     func testTappingGenreNavigatesToBrowser() {
         navigateToSidebarIfNeeded()
         let comedy = app.staticTexts["Comedy"]

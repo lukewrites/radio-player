@@ -35,8 +35,8 @@ struct ShowDetailViewModelTests {
         let vm = ShowDetailViewModel(show: show, api: api, modelContext: context)
         await vm.loadEpisodes()
 
-        // Should only have playable audio files (3 of 6 in fixture)
-        #expect(vm.episodes.count == 3)
+        // 3 audio files in fixture, but Cop Killing has MP3+OGG → deduped to 2 episodes
+        #expect(vm.episodes.count == 2)
         #expect(vm.isLoading == false)
     }
 
@@ -125,6 +125,86 @@ struct ShowDetailViewModelTests {
         #expect(vm.errorMessage != nil)
     }
 
+    // MARK: - Deduplication
+
+    @Test("deduplicates MP3 and OGG for same episode")
+    func deduplicatesMp3AndOgg() async throws {
+        let data = try loadFixture("item_metadata_dedup")
+        let api = ArchiveAPI(session: MockURLSession(data: data))
+        let container = try makeContainer()
+        let context = ModelContext(container)
+
+        let show = Show(identifier: "OTRR_Abbott_Singles", title: "Abbott and Costello - Single Episodes", collection: "oldtimeradio")
+        context.insert(show)
+        try context.save()
+
+        let vm = ShowDetailViewModel(show: show, api: api, modelContext: context)
+        await vm.loadEpisodes()
+
+        // Fixture has 5 audio files across 3 unique episodes (2 have MP3+OGG pairs)
+        #expect(vm.episodes.count == 3)
+        // No OGG episodes should appear when a matching MP3 exists
+        let hasOgg = vm.episodes.contains { $0.format.lowercased().contains("ogg") }
+        #expect(!hasOgg, "OGG should be dropped when MP3 exists for same episode")
+    }
+
+    @Test("prefers explicit title field over filename")
+    func prefersExplicitTitleField() async throws {
+        let data = try loadFixture("item_metadata_dedup")
+        let api = ArchiveAPI(session: MockURLSession(data: data))
+        let container = try makeContainer()
+        let context = ModelContext(container)
+
+        let show = Show(identifier: "OTRR_Abbott_Singles", title: "Abbott and Costello - Single Episodes", collection: "oldtimeradio")
+        context.insert(show)
+        try context.save()
+
+        let vm = ShowDetailViewModel(show: show, api: api, modelContext: context)
+        await vm.loadEpisodes()
+
+        let madame = vm.episodes.first { $0.title == "Guest - Madame Lazonga" }
+        #expect(madame != nil, "Episode with explicit title field should use that title")
+    }
+
+    @Test("strips show name and date prefix from filename when no title")
+    func stripsShowNameAndDateFromFilename() async throws {
+        let data = try loadFixture("item_metadata_dedup")
+        let api = ArchiveAPI(session: MockURLSession(data: data))
+        let container = try makeContainer()
+        let context = ModelContext(container)
+
+        let show = Show(identifier: "OTRR_Abbott_Singles", title: "Abbott and Costello - Single Episodes", collection: "oldtimeradio")
+        context.insert(show)
+        try context.save()
+
+        let vm = ShowDetailViewModel(show: show, api: api, modelContext: context)
+        await vm.loadEpisodes()
+
+        // "Abbott and Costello 40-10-15 Bank Robbery.mp3" → "Bank Robbery"
+        let bankRobbery = vm.episodes.first { $0.title == "Bank Robbery" }
+        #expect(bankRobbery != nil, "Date prefix and show name should be stripped from filename-derived title")
+    }
+
+    @Test("groups titled file with matching dated filename as one episode")
+    func groupsTitledFileWithDatedFilename() async throws {
+        let data = try loadFixture("item_metadata_dedup")
+        let api = ArchiveAPI(session: MockURLSession(data: data))
+        let container = try makeContainer()
+        let context = ModelContext(container)
+
+        let show = Show(identifier: "OTRR_Abbott_Singles", title: "Abbott and Costello - Single Episodes", collection: "oldtimeradio")
+        context.insert(show)
+        try context.save()
+
+        let vm = ShowDetailViewModel(show: show, api: api, modelContext: context)
+        await vm.loadEpisodes()
+
+        // MP3 has title="Guest - Madame Lazonga"; OGG has matching dated filename
+        // Both should collapse to one episode with the clean title
+        let madameEpisodes = vm.episodes.filter { $0.title == "Guest - Madame Lazonga" }
+        #expect(madameEpisodes.count == 1, "Titled MP3 and matching OGG should merge into one episode")
+    }
+
     // MARK: - Filtering
 
     @Test("filteredEpisodes returns all when no filter set")
@@ -165,6 +245,6 @@ struct ShowDetailViewModelTests {
         #expect(vm.filteredEpisodes.count == 1)
 
         vm.filterStatus = .new
-        #expect(vm.filteredEpisodes.count == 2)
+        #expect(vm.filteredEpisodes.count == 1)
     }
 }
