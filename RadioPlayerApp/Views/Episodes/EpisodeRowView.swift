@@ -13,33 +13,34 @@ struct EpisodeRowView: View {
             statusIndicator
                 .frame(width: 10, height: 10)
 
-            VStack(alignment: .leading, spacing: 2) {
-                Text(episode.title ?? episode.filename)
-                    .font(.subheadline)
-                    .fontWeight(episode.episodeStatus == .new ? .medium : .regular)
-                    .lineLimit(2)
+            Button(action: onPlay) {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(episode.title ?? episode.filename)
+                        .font(.subheadline)
+                        .fontWeight(episode.episodeStatus == .new ? .medium : .regular)
+                        .lineLimit(2)
+                        .foregroundStyle(.primary)
 
-                HStack(spacing: 8) {
-                    if let duration = episode.duration {
-                        Text(formatDuration(duration))
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                    }
+                    HStack(spacing: 8) {
+                        if let duration = episode.duration {
+                            Text(formatDuration(duration))
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
 
-                    if episode.episodeStatus == .inProgress, let duration = episode.duration, duration > 0 {
-                        ProgressView(value: episode.playbackPosition / duration)
-                            .frame(width: 60)
-                            .tint(.orange)
+                        if episode.episodeStatus == .inProgress, let duration = episode.duration, duration > 0 {
+                            ProgressView(value: episode.playbackPosition / duration)
+                                .frame(width: 60)
+                                .tint(.orange)
+                        }
                     }
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
             }
-
-            Spacer()
+            .buttonStyle(.plain)
 
             downloadButton
         }
-        .contentShape(Rectangle())
-        .onTapGesture { onPlay() }
     }
 
     @ViewBuilder

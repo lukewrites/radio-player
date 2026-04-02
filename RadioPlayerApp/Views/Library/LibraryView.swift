@@ -35,6 +35,9 @@ struct LibraryView: View {
                 }
                 .listStyle(.plain)
                 .refreshable { vm.load() }
+            } else {
+                ProgressView()
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
         }
         .navigationTitle("Library")

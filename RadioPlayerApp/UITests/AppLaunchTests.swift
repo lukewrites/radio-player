@@ -30,30 +30,35 @@ final class AppLaunchTests: XCTestCase {
     }
 
     func testSidebarReachableViaBackButton() {
-        // On iPhone compact, tap back to reach the sidebar (CollectionListView)
-        let backButton = app.navigationBars.buttons["Radio Player"]
-        guard backButton.waitForExistence(timeout: 5) else {
-            // Already on the sidebar or wide layout — look for the list directly
-            let allShows = app.staticTexts["All Shows"]
-            XCTAssertTrue(allShows.waitForExistence(timeout: 5),
-                          "All Shows should be visible in sidebar")
-            return
+        // iPhone: back button labeled "Radio Player"
+        if app.navigationBars.buttons["Radio Player"].waitForExistence(timeout: 2) {
+            app.navigationBars.buttons["Radio Player"].tap()
         }
-        backButton.tap()
+        // iPad portrait: system sidebar toggle
+        else if app.buttons["Show Sidebar"].waitForExistence(timeout: 2) {
+            app.buttons["Show Sidebar"].tap()
+        }
+        // Wide iPad: sidebar already visible, nothing to tap
 
-        let allShows = app.staticTexts["All Shows"]
-        XCTAssertTrue(allShows.waitForExistence(timeout: 5),
-                      "All Shows should be visible after navigating to sidebar")
+        XCTAssertTrue(app.staticTexts["All Shows"].waitForExistence(timeout: 5),
+                      "All Shows should be visible in sidebar")
     }
 
     func testLibraryRowVisible() {
-        // Navigate back to sidebar if needed
-        let backButton = app.navigationBars.buttons["Radio Player"]
-        if backButton.waitForExistence(timeout: 3) {
-            backButton.tap()
+        // Navigate to sidebar (handles iPhone back button and iPad Show Sidebar toggle)
+        if app.navigationBars.buttons["Radio Player"].waitForExistence(timeout: 2) {
+            app.navigationBars.buttons["Radio Player"].tap()
+        } else if app.buttons["Show Sidebar"].waitForExistence(timeout: 2) {
+            app.buttons["Show Sidebar"].tap()
         }
 
-        let library = app.staticTexts["Library"]
-        XCTAssertTrue(library.waitForExistence(timeout: 5), "Library row should be visible in sidebar")
+        // Library is near the bottom — scroll sidebar to bring it into the accessibility tree
+        let sidebar = app.tables.firstMatch
+        if sidebar.waitForExistence(timeout: 3) {
+            sidebar.swipeUp()
+        }
+
+        XCTAssertTrue(app.staticTexts["Library"].waitForExistence(timeout: 5),
+                      "Library row should be visible in sidebar")
     }
 }

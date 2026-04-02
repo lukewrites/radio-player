@@ -20,28 +20,32 @@ final class LibraryTests: XCTestCase {
     // MARK: - Helpers
 
     private func navigateToSidebarIfNeeded() {
-        let backButton = app.navigationBars.buttons["Radio Player"]
-        if backButton.waitForExistence(timeout: 3) {
-            backButton.tap()
+        // iPhone: tap the "Radio Player" back button
+        if app.navigationBars.buttons["Radio Player"].waitForExistence(timeout: 2) {
+            app.navigationBars.buttons["Radio Player"].tap()
+            return
         }
+        // iPad portrait: tap the "Show Sidebar" toggle the split view adds automatically
+        if app.buttons["Show Sidebar"].waitForExistence(timeout: 2) {
+            app.buttons["Show Sidebar"].tap()
+            return
+        }
+        // Wide iPad landscape: sidebar is always visible, nothing to do
     }
 
     private func navigateToLibrary() {
         navigateToSidebarIfNeeded()
         let library = app.staticTexts["Library"]
-        if library.waitForExistence(timeout: 5) {
-            library.tap()
-        }
+        guard library.waitForExistence(timeout: 5) else { return }
+        library.tap()
     }
 
     // MARK: - Tests
 
     func testLibraryRowVisibleInSidebar() {
         navigateToSidebarIfNeeded()
-        XCTAssertTrue(
-            app.staticTexts["Library"].waitForExistence(timeout: 5),
-            "Library row should be visible in sidebar"
-        )
+        XCTAssertTrue(app.staticTexts["Library"].waitForExistence(timeout: 5),
+                      "Library row should be visible in sidebar")
     }
 
     func testLibraryOpensWithCorrectTitle() {
@@ -54,17 +58,22 @@ final class LibraryTests: XCTestCase {
 
     func testLibraryHasThreeTabs() {
         navigateToLibrary()
-        XCTAssertTrue(app.buttons["Continue"].waitForExistence(timeout: 5),
-                      "Library should have a 'Continue' tab")
-        XCTAssertTrue(app.buttons["Completed"].waitForExistence(timeout: 3),
-                      "Library should have a 'Completed' tab")
-        XCTAssertTrue(app.buttons["Downloads"].waitForExistence(timeout: 3),
-                      "Library should have a 'Downloads' tab")
+        guard app.navigationBars["Library"].waitForExistence(timeout: 5) else {
+            XCTFail("Library did not open"); return
+        }
+        // Library uses a segmented Picker — options appear as segmented control buttons
+        let picker = app.segmentedControls.firstMatch
+        XCTAssertTrue(picker.waitForExistence(timeout: 5), "Segmented picker should be visible")
+        XCTAssertTrue(picker.buttons["Continue"].exists,  "Library should have a 'Continue' tab")
+        XCTAssertTrue(picker.buttons["Completed"].exists, "Library should have a 'Completed' tab")
+        XCTAssertTrue(picker.buttons["Downloads"].exists, "Library should have a 'Downloads' tab")
     }
 
     func testLibraryContinueTabShowsEmptyState() {
         navigateToLibrary()
-        // In a fresh UI test session with no playback, Continue should show the empty state
+        guard app.navigationBars["Library"].waitForExistence(timeout: 5) else {
+            XCTFail("Library did not open"); return
+        }
         XCTAssertTrue(
             app.staticTexts["Nothing In Progress"].waitForExistence(timeout: 5),
             "Continue tab should show empty state when no episodes are in progress"
@@ -73,7 +82,10 @@ final class LibraryTests: XCTestCase {
 
     func testLibraryCompletedTabShowsEmptyState() {
         navigateToLibrary()
-        app.buttons["Completed"].tap()
+        guard app.navigationBars["Library"].waitForExistence(timeout: 5) else {
+            XCTFail("Library did not open"); return
+        }
+        app.segmentedControls.firstMatch.buttons["Completed"].tap()
         XCTAssertTrue(
             app.staticTexts["Nothing Completed"].waitForExistence(timeout: 5),
             "Completed tab should show empty state when no episodes are completed"
@@ -82,7 +94,10 @@ final class LibraryTests: XCTestCase {
 
     func testLibraryDownloadsTabShowsEmptyState() {
         navigateToLibrary()
-        app.buttons["Downloads"].tap()
+        guard app.navigationBars["Library"].waitForExistence(timeout: 5) else {
+            XCTFail("Library did not open"); return
+        }
+        app.segmentedControls.firstMatch.buttons["Downloads"].tap()
         XCTAssertTrue(
             app.staticTexts["No Downloads"].waitForExistence(timeout: 5),
             "Downloads tab should show empty state when nothing is downloaded"
@@ -91,26 +106,18 @@ final class LibraryTests: XCTestCase {
 
     func testLibraryTabSwitching() {
         navigateToLibrary()
+        guard app.navigationBars["Library"].waitForExistence(timeout: 5) else {
+            XCTFail("Library did not open"); return
+        }
+        let picker = app.segmentedControls.firstMatch
 
-        // Switch to Completed
-        app.buttons["Completed"].tap()
-        XCTAssertTrue(
-            app.staticTexts["Nothing Completed"].waitForExistence(timeout: 3),
-            "Switching to Completed tab should show its content"
-        )
+        picker.buttons["Completed"].tap()
+        XCTAssertTrue(app.staticTexts["Nothing Completed"].waitForExistence(timeout: 3))
 
-        // Switch to Downloads
-        app.buttons["Downloads"].tap()
-        XCTAssertTrue(
-            app.staticTexts["No Downloads"].waitForExistence(timeout: 3),
-            "Switching to Downloads tab should show its content"
-        )
+        picker.buttons["Downloads"].tap()
+        XCTAssertTrue(app.staticTexts["No Downloads"].waitForExistence(timeout: 3))
 
-        // Switch back to Continue
-        app.buttons["Continue"].tap()
-        XCTAssertTrue(
-            app.staticTexts["Nothing In Progress"].waitForExistence(timeout: 3),
-            "Switching back to Continue tab should show its content"
-        )
+        picker.buttons["Continue"].tap()
+        XCTAssertTrue(app.staticTexts["Nothing In Progress"].waitForExistence(timeout: 3))
     }
 }

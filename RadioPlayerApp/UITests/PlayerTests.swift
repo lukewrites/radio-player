@@ -88,11 +88,10 @@ final class PlayerTests: XCTestCase {
             return
         }
 
-        // Tap the episode row — onTapGesture triggers onPlay
         app.staticTexts["The Big Crime"].firstMatch.tap()
 
         XCTAssertTrue(
-            app.otherElements["miniPlayer"].waitForExistence(timeout: 5),
+            app.buttons["miniPlayer"].waitForExistence(timeout: 5),
             "Mini player should appear after tapping an episode"
         )
     }
@@ -115,7 +114,7 @@ final class PlayerTests: XCTestCase {
 
         app.staticTexts["The Big Crime"].firstMatch.tap()
 
-        let miniPlayer = app.otherElements["miniPlayer"]
+        let miniPlayer = app.buttons["miniPlayer"]
         guard miniPlayer.waitForExistence(timeout: 5) else {
             XCTFail("Mini player did not appear")
             return
@@ -147,7 +146,7 @@ final class PlayerTests: XCTestCase {
 
         app.staticTexts["The Big Crime"].firstMatch.tap()
 
-        let miniPlayer = app.otherElements["miniPlayer"]
+        let miniPlayer = app.buttons["miniPlayer"]
         guard miniPlayer.waitForExistence(timeout: 5) else {
             XCTFail("Mini player did not appear")
             return
@@ -178,7 +177,7 @@ final class PlayerTests: XCTestCase {
 
         app.staticTexts["The Big Crime"].firstMatch.tap()
 
-        let miniPlayer = app.otherElements["miniPlayer"]
+        let miniPlayer = app.buttons["miniPlayer"]
         guard miniPlayer.waitForExistence(timeout: 5) else {
             XCTFail("Mini player did not appear")
             return

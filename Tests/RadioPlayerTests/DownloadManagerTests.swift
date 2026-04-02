@@ -3,6 +3,24 @@ import Foundation
 import SwiftData
 @testable import RadioPlayer
 
+// MARK: - Test doubles
+
+final class FakeDownloadTask: DownloadTaskProtocol {
+    var resumed = false
+    var cancelled = false
+    func resume() { resumed = true }
+    func cancel() { cancelled = true }
+}
+
+final class FakeDownloadSession: DownloadSessionProtocol {
+    var createdTasks: [URL: FakeDownloadTask] = [:]
+    func makeDownloadTask(with url: URL) -> any DownloadTaskProtocol {
+        let task = FakeDownloadTask()
+        createdTasks[url] = task
+        return task
+    }
+}
+
 @Suite("DownloadManager")
 @MainActor
 struct DownloadManagerTests {
@@ -80,13 +98,13 @@ struct DownloadManagerTests {
 
     @Test("markDownloadComplete removes episode from active downloads")
     func downloadCompleteRemovesActive() throws {
-        let manager = DownloadManager()
+        let fakeSession = FakeDownloadSession()
+        let manager = DownloadManager(session: fakeSession)
         let container = try makeContainer()
         let context = ModelContext(container)
         let episode = try makeEpisode(context: context)
 
-        // Simulate an active download entry
-        manager.simulateActiveDownload(for: episode)
+        manager.downloadEpisode(episode)
         #expect(manager.isDownloading(episode) == true)
 
         manager.markDownloadComplete(for: episode, context: context)
@@ -114,12 +132,13 @@ struct DownloadManagerTests {
 
     @Test("updateProgress stores fraction completed")
     func updateProgress() throws {
-        let manager = DownloadManager()
+        let fakeSession = FakeDownloadSession()
+        let manager = DownloadManager(session: fakeSession)
         let container = try makeContainer()
         let context = ModelContext(container)
         let episode = try makeEpisode(context: context)
 
-        manager.simulateActiveDownload(for: episode)
+        manager.downloadEpisode(episode)
         manager.updateProgress(for: episode, bytesWritten: 500_000, totalBytes: 1_000_000)
 
         let progress = manager.progress(for: episode)

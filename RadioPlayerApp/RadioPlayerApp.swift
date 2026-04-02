@@ -20,6 +20,18 @@ struct RadioPlayerApp: App {
     private let speedStore = PlaybackSpeedStore()
     private let themeStore = ThemeStore()
 
+    /// UI tests use an in-memory container so each run starts with clean data —
+    /// no starred shows or playback state bleeding between test cases.
+    private static func makeModelContainer() -> ModelContainer {
+        #if DEBUG
+        let inMemory = ProcessInfo.processInfo.arguments.contains("--uitesting")
+        #else
+        let inMemory = false
+        #endif
+        let config = ModelConfiguration(isStoredInMemoryOnly: inMemory)
+        return try! ModelContainer(for: Show.self, Episode.self, configurations: config)
+    }
+
     var body: some Scene {
         WindowGroup {
             ContentView(currentTheme: $currentTheme)
@@ -44,6 +56,6 @@ struct RadioPlayerApp: App {
                     themeStore.theme = newTheme
                 }
         }
-        .modelContainer(for: [Show.self, Episode.self])
+        .modelContainer(Self.makeModelContainer())
     }
 }

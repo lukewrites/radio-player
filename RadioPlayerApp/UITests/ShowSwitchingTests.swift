@@ -22,17 +22,25 @@ final class ShowSwitchingTests: XCTestCase {
     // MARK: - Helpers
 
     private func navigateToSidebarIfNeeded() {
-        let backButton = app.navigationBars.buttons["Radio Player"]
-        if backButton.waitForExistence(timeout: 3) {
-            backButton.tap()
+        // iPhone: tap the "Radio Player" back button
+        if app.navigationBars.buttons["Radio Player"].waitForExistence(timeout: 2) {
+            app.navigationBars.buttons["Radio Player"].tap()
+            return
         }
+        // iPad portrait: tap the "Show Sidebar" toggle the split view adds automatically
+        if app.buttons["Show Sidebar"].waitForExistence(timeout: 2) {
+            app.buttons["Show Sidebar"].tap()
+            return
+        }
+        // Wide iPad landscape: sidebar is always visible, nothing to do
+
     }
 
     private func navigateToAllShows() {
         navigateToSidebarIfNeeded()
-        let allShows = app.staticTexts["All Shows"]
-        if allShows.waitForExistence(timeout: 3) {
-            allShows.tap()
+        let row = app.staticTexts["All Shows"]
+        if row.waitForExistence(timeout: 3) {
+            row.tap()
         }
     }
 

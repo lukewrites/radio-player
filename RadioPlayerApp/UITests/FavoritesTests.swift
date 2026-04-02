@@ -20,25 +20,33 @@ final class FavoritesTests: XCTestCase {
     // MARK: - Helpers
 
     private func navigateToSidebarIfNeeded() {
-        let backButton = app.navigationBars.buttons["Radio Player"]
-        if backButton.waitForExistence(timeout: 3) {
-            backButton.tap()
+        // iPhone: tap the "Radio Player" back button
+        if app.navigationBars.buttons["Radio Player"].waitForExistence(timeout: 2) {
+            app.navigationBars.buttons["Radio Player"].tap()
+            return
         }
+        // iPad portrait: tap the "Show Sidebar" toggle the split view adds automatically
+        if app.buttons["Show Sidebar"].waitForExistence(timeout: 2) {
+            app.buttons["Show Sidebar"].tap()
+            return
+        }
+        // Wide iPad landscape: sidebar is always visible, nothing to do
+
     }
 
     private func navigateToFavorites() {
         navigateToSidebarIfNeeded()
-        let favorites = app.staticTexts["Favorites"]
-        if favorites.waitForExistence(timeout: 5) {
-            favorites.tap()
+        let row = app.staticTexts["Favorites"]
+        if row.waitForExistence(timeout: 5) {
+            row.tap()
         }
     }
 
     private func navigateToAllShows() {
         navigateToSidebarIfNeeded()
-        let allShows = app.staticTexts["All Shows"]
-        if allShows.waitForExistence(timeout: 3) {
-            allShows.tap()
+        let row = app.staticTexts["All Shows"]
+        if row.waitForExistence(timeout: 3) {
+            row.tap()
         }
     }
 
@@ -107,7 +115,7 @@ final class FavoritesTests: XCTestCase {
         )
 
         // Cleanup: un-star the show so this test is repeatable
-        app.staticTexts["Dragnet: Big Crime"].tap()
+        app.staticTexts["Dragnet: Big Crime"].firstMatch.tap()
         if app.buttons["Remove from Favorites"].waitForExistence(timeout: 5) {
             app.buttons["Remove from Favorites"].tap()
         }

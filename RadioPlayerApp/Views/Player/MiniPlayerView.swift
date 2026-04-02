@@ -8,26 +8,34 @@ struct MiniPlayerView: View {
 
     var body: some View {
         HStack(spacing: 12) {
-            // Cover art
-            AsyncCachedImage(
-                url: player.currentEpisode?.show?.thumbnailImageURL,
-                title: player.currentEpisode?.show?.title ?? "Now Playing",
-                size: 44
-            )
+            // Tapping the artwork/title area opens the full player
+            Button {
+                showFullPlayer = true
+            } label: {
+                HStack(spacing: 12) {
+                    AsyncCachedImage(
+                        url: player.currentEpisode?.show?.thumbnailImageURL,
+                        title: player.currentEpisode?.show?.title ?? "Now Playing",
+                        size: 44
+                    )
 
-            // Title info
-            VStack(alignment: .leading, spacing: 1) {
-                Text(player.currentEpisode?.title ?? player.currentEpisode?.filename ?? "")
-                    .font(.subheadline)
-                    .fontWeight(.medium)
-                    .lineLimit(1)
-                Text(player.currentEpisode?.show?.title ?? "")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                    .lineLimit(1)
+                    VStack(alignment: .leading, spacing: 1) {
+                        Text(player.currentEpisode?.title ?? player.currentEpisode?.filename ?? "")
+                            .font(.subheadline)
+                            .fontWeight(.medium)
+                            .lineLimit(1)
+                        Text(player.currentEpisode?.show?.title ?? "")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                            .lineLimit(1)
+                    }
+
+                    Spacer()
+                }
             }
-
-            Spacer()
+            .buttonStyle(.plain)
+            .accessibilityLabel("Open full player")
+            .accessibilityIdentifier("miniPlayer")
 
             // Controls
             HStack(spacing: 20) {
@@ -71,8 +79,6 @@ struct MiniPlayerView: View {
                 .frame(height: 2)
             }
         }
-        .accessibilityIdentifier("miniPlayer")
-        .onTapGesture { showFullPlayer = true }
         .sheet(isPresented: $showFullPlayer) {
             FullPlayerView()
         }

@@ -2,6 +2,27 @@ import Foundation
 import SwiftData
 import Observation
 
+// MARK: - Protocols for testability
+
+protocol DownloadTaskProtocol: AnyObject {
+    func resume()
+    func cancel()
+}
+
+protocol DownloadSessionProtocol: AnyObject {
+    func makeDownloadTask(with url: URL) -> any DownloadTaskProtocol
+}
+
+extension URLSessionDownloadTask: DownloadTaskProtocol {}
+
+extension URLSession: DownloadSessionProtocol {
+    func makeDownloadTask(with url: URL) -> any DownloadTaskProtocol {
+        return downloadTask(with: url)
+    }
+}
+
+// MARK: -
+
 public struct DownloadProgress: Sendable {
     public var downloadedBytes: Int64
     public var totalBytes: Int64
@@ -22,20 +43,26 @@ public final class DownloadManager: NSObject {
     // Key: "identifier/filename"
     public var activeDownloads: [String: DownloadProgress] = [:]
 
-    @ObservationIgnored private var tasks: [String: URLSessionDownloadTask] = [:]
-    @ObservationIgnored private var _session: URLSession?
+    @ObservationIgnored private var tasks: [String: (task: any DownloadTaskProtocol, url: URL)] = [:]
+    @ObservationIgnored private var _injectedSession: (any DownloadSessionProtocol)?
+    @ObservationIgnored private var _backgroundSession: URLSession?
 
-    private var session: URLSession {
-        if let s = _session { return s }
+    private var session: any DownloadSessionProtocol {
+        if let s = _injectedSession { return s }
+        if let s = _backgroundSession { return s }
         let config = URLSessionConfiguration.background(withIdentifier: "com.radioplayer.downloads")
         config.isDiscretionary = false
         config.sessionSendsLaunchEvents = true
         let s = URLSession(configuration: config, delegate: self, delegateQueue: .main)
-        _session = s
+        _backgroundSession = s
         return s
     }
 
     public override init() {}
+
+    init(session: any DownloadSessionProtocol) {
+        _injectedSession = session
+    }
 
     // MARK: - Key helpers
 
@@ -67,14 +94,14 @@ public final class DownloadManager: NSObject {
         guard activeDownloads[k] == nil else { return }
 
         activeDownloads[k] = DownloadProgress(downloadedBytes: 0, totalBytes: 0)
-        let task = session.downloadTask(with: url)
-        tasks[k] = task
+        let task = session.makeDownloadTask(with: url)
+        tasks[k] = (task: task, url: url)
         task.resume()
     }
 
     public func cancelDownload(_ episode: Episode) {
         guard let k = key(for: episode) else { return }
-        tasks[k]?.cancel()
+        tasks[k]?.task.cancel()
         tasks[k] = nil
         activeDownloads[k] = nil
     }
@@ -106,15 +133,6 @@ public final class DownloadManager: NSObject {
         guard let k = key(for: episode) else { return }
         activeDownloads[k] = DownloadProgress(downloadedBytes: bytesWritten, totalBytes: totalBytes)
     }
-
-    // MARK: - Test helpers
-
-    #if DEBUG
-    public func simulateActiveDownload(for episode: Episode) {
-        guard let k = key(for: episode) else { return }
-        activeDownloads[k] = DownloadProgress(downloadedBytes: 0, totalBytes: 0)
-    }
-    #endif
 }
 
 // MARK: - URLSessionDownloadDelegate
@@ -126,11 +144,10 @@ extension DownloadManager: URLSessionDownloadDelegate {
         didFinishDownloadingTo location: URL
     ) {
         guard let url = downloadTask.originalRequest?.url else { return }
-        let urlString = url.absoluteString
 
         Task { @MainActor in
-            // Find matching task key
-            guard let matchingKey = self.tasks.first(where: { $0.value.originalRequest?.url == url })?.key else { return }
+            // Find matching task key using stored URL
+            guard let matchingKey = self.tasks.first(where: { $0.value.url == url })?.key else { return }
 
             // Parse identifier/filename from key
             let parts = matchingKey.split(separator: "/", maxSplits: 1)
@@ -152,7 +169,6 @@ extension DownloadManager: URLSessionDownloadDelegate {
             } catch {
                 print("DownloadManager: failed to move file: \(error)")
             }
-            _ = urlString // suppress unused warning
         }
     }
 
@@ -165,7 +181,7 @@ extension DownloadManager: URLSessionDownloadDelegate {
     ) {
         guard let url = downloadTask.originalRequest?.url else { return }
         Task { @MainActor in
-            guard let matchingKey = self.tasks.first(where: { $0.value.originalRequest?.url == url })?.key else { return }
+            guard let matchingKey = self.tasks.first(where: { $0.value.url == url })?.key else { return }
             self.activeDownloads[matchingKey] = DownloadProgress(
                 downloadedBytes: totalBytesWritten,
                 totalBytes: totalBytesExpectedToWrite
