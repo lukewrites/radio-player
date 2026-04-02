@@ -25,6 +25,8 @@
 		T30000020000000000000002 /* ThemeKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = T20000020000000000000002; };
 		T30000030000000000000003 /* ThemeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = T20000030000000000000003; };
 		T30000040000000000000004 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = T20000040000000000000004; };
+		NV0000020000000000000002 /* SidebarDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = NV0000010000000000000001; };
+		NV0000050000000000000005 /* FavoritesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = NV0000040000000000000004; };
 		FF0000020000000000000002 /* UITestMockURLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF0000010000000000000001; };
 		FF0000080000000000000008 /* AppLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF0000050000000000000005; };
 		FF0000090000000000000009 /* NavigationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF0000060000000000000006; };
@@ -53,6 +55,8 @@
 		T20000020000000000000002 /* ThemeKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeKey.swift; sourceTree = "<group>"; };
 		T20000030000000000000003 /* ThemeStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeStore.swift; sourceTree = "<group>"; };
 		T20000040000000000000004 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		NV0000010000000000000001 /* SidebarDestination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarDestination.swift; sourceTree = "<group>"; };
+		NV0000040000000000000004 /* FavoritesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesView.swift; sourceTree = "<group>"; };
 		FF0000010000000000000001 /* UITestMockURLSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITestMockURLSession.swift; sourceTree = "<group>"; };
 		FF0000040000000000000004 /* RadioPlayerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RadioPlayerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		FF0000050000000000000005 /* AppLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLaunchTests.swift; sourceTree = "<group>"; };
@@ -91,6 +95,7 @@
 				A20000030000000000000003 /* Assets.xcassets */,
 				A20000060000000000000006 /* Info.plist */,
 				T10000010000000000000001 /* Theme */,
+				NV0000030000000000000003 /* Navigation */,
 				A40000050000000000000005 /* Views */,
 				FF0000030000000000000003 /* UITestSupport */,
 			);
@@ -124,6 +129,14 @@
 				T20000030000000000000003 /* ThemeStore.swift */,
 			);
 			path = Theme;
+			sourceTree = "<group>";
+		};
+		NV0000030000000000000003 /* Navigation */ = {
+			isa = PBXGroup;
+			children = (
+				NV0000010000000000000001 /* SidebarDestination.swift */,
+			);
+			path = Navigation;
 			sourceTree = "<group>";
 		};
 		A40000050000000000000005 /* Views */ = {
@@ -171,6 +184,7 @@
 			children = (
 				A2000000B000000000000000B /* ShowCardView.swift */,
 				A2000000C000000000000000C /* ShowDetailView.swift */,
+				NV0000040000000000000004 /* FavoritesView.swift */,
 			);
 			path = Views/Shows;
 			sourceTree = "<group>";
@@ -338,6 +352,8 @@
 				T30000020000000000000002 /* ThemeKey.swift in Sources */,
 				T30000030000000000000003 /* ThemeStore.swift in Sources */,
 				T30000040000000000000004 /* SettingsView.swift in Sources */,
+				NV0000020000000000000002 /* SidebarDestination.swift in Sources */,
+				NV0000050000000000000005 /* FavoritesView.swift in Sources */,
 				FF0000020000000000000002 /* UITestMockURLSession.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -431,7 +447,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.radioplayer.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
@@ -456,7 +472,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.radioplayer.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
