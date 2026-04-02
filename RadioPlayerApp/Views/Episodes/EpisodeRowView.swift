@@ -8,6 +8,13 @@ struct EpisodeRowView: View {
 
     @Environment(DownloadManager.self) private var downloadManager
 
+    private static let broadcastDateFormatter: DateFormatter = {
+        let f = DateFormatter()
+        f.dateFormat = "MMM d, yyyy"
+        f.locale = Locale(identifier: "en_US_POSIX")
+        return f
+    }()
+
     var body: some View {
         HStack(spacing: 12) {
             statusIndicator
@@ -22,6 +29,12 @@ struct EpisodeRowView: View {
                         .foregroundStyle(.primary)
 
                     HStack(spacing: 8) {
+                        if let date = episode.broadcastDate {
+                            Text(Self.broadcastDateFormatter.string(from: date))
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+
                         if let duration = episode.duration {
                             Text(formatDuration(duration))
                                 .font(.caption)
