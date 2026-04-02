@@ -123,19 +123,29 @@ public final class ShowDetailViewModel {
     /// Human-readable title: uses explicit title field or cleans the filename.
     /// In both cases, strips any embedded date prefix (e.g. "JB 1943-10-10 ").
     private func cleanedTitle(for file: ArchiveFile, showTitle: String) -> String {
-        var name = file.title?.isEmpty == false
+        let hasTitle = file.title?.isEmpty == false
+        var name = hasTitle
             ? file.title!
             : (file.name as NSString).deletingPathExtension.replacingOccurrences(of: "_", with: " ")
+
+        // Some archive.org records store the raw filename as the title field (dirty titles),
+        // e.g. "Dragnet_49-09-01_013_Auto_Burglaries_-_Myra,_the_Redhead".
+        // Detect these by looking for a date surrounded by underscores and normalize.
+        if hasTitle, name.firstMatch(of: #/_\d{2,4}-\d{2}-\d{2}_/#) != nil {
+            name = name.replacingOccurrences(of: "_", with: " ")
+        }
 
         // Strip everything up to and including a date (YY-MM-DD / YYYY-MM-DD),
         // plus any optional episode marker like (xxx) that follows.
         // e.g. "JB 1943-10-10 Casablanca" → "Casablanca"
         // e.g. "Halls of Ivy 49-06-22 (xxx) Title" → "Title"
+        // e.g. "Dragnet 49-09-01 013 Auto Burglaries..." → "Auto Burglaries..."
         let afterDate = name.replacing(#/^.*?\d{2,4}-\d{2}-\d{2}\s*(?:\(\w+\)\s*)?/#, with: "")
         if !afterDate.isEmpty, afterDate != name {
-            name = afterDate
-        } else {
-            // No date found — strip leading track number and show name prefix
+            // Date was found and stripped — also remove any leading episode number ("013 ")
+            name = afterDate.replacing(#/^\d+\s+/#, with: "")
+        } else if !hasTitle {
+            // No date in filename-derived title — strip leading track number and show name prefix
             name = name.replacing(#/^\d+\s+/#, with: "")
             var lower = name.lowercased()
             stripShowPrefix(from: &lower, showTitle: showTitle.lowercased())
@@ -143,6 +153,7 @@ public final class ShowDetailViewModel {
                 name = String(name.suffix(lower.count))
             }
         }
+        // If title field is present and contains no date, return it as-is (no stripping)
 
         let cleaned = name.trimmingCharacters(in: .init(charactersIn: " _-"))
         return cleaned.isEmpty ? (file.title ?? file.name) : cleaned
